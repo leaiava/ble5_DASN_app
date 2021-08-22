@@ -75,11 +75,12 @@
 /*
  *  =============================== ADCBuf ===============================
  */
+/*
 #include <ti/drivers/ADCBuf.h>
 #include <ti/drivers/adcbuf/ADCBufCC26XX.h>
 
 ADCBufCC26XX_Object adcBufCC26xxObjects[DASN_ADCBUFCOUNT];
-
+*/
 /*
  *  This table converts a virtual adc channel into a dio and internal analogue
  *  input signal. This table is necessary for the functioning of the adcBuf
@@ -87,6 +88,7 @@ ADCBufCC26XX_Object adcBufCC26xxObjects[DASN_ADCBUFCOUNT];
  *  pairs are hardwired. Do not remap them in the table. You may reorder entire
  *  entries. The mapping of dio and internal signals is package dependent.
  */
+/*
 const ADCBufCC26XX_AdcChannelLutEntry ADCBufCC26XX_adcChannelLut[DASN_ADCBUF0CHANNELCOUNT] = {
     {DASN_DIO23_ANALOG, ADC_COMPB_IN_AUXIO7},
     {DASN_DIO24_ANALOG, ADC_COMPB_IN_AUXIO6},
@@ -118,18 +120,20 @@ const ADCBuf_Config ADCBuf_config[DASN_ADCBUFCOUNT] = {
 };
 
 const uint_least8_t ADCBuf_count = DASN_ADCBUFCOUNT;
+*/
 
 /*
  *  =============================== ADC ===============================
  */
-#include <ti/drivers/ADC.h>
-#include <ti/drivers/adc/ADCCC26XX.h>
 
+#include <ti/drivers/ADC.h>
+#include <ti/drivers/adc/ADCCC26XX.h> // Dejo este include sino algo de crypto no lo reconoce
+/*
 ADCCC26XX_Object adcCC26xxObjects[DASN_ADCCOUNT];
 
 const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO23_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO7,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -138,7 +142,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO24_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO6,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -147,7 +151,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO25_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO5,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -156,7 +160,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO26_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO4,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -165,7 +169,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO27_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO3,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -174,7 +178,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO28_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO2,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -183,7 +187,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO29_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO1,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_2P7_US,
@@ -192,7 +196,7 @@ const ADCCC26XX_HWAttrs adcCC26xxHWAttrs[DASN_ADCCOUNT] = {
         .returnAdjustedVal   = false
     },
     {
-        .adcDIO              = PIN_UNASSIGNED,
+        .adcDIO              = DASN_DIO30_ANALOG,
         .adcCompBInput       = ADC_COMPB_IN_AUXIO0,
         .refSource           = ADCCC26XX_FIXED_REFERENCE,
         .samplingDuration    = ADCCC26XX_SAMPLING_DURATION_10P9_MS,
@@ -244,10 +248,12 @@ const ADC_Config ADC_config[DASN_ADCCOUNT] = {
 };
 
 const uint_least8_t ADC_count = DASN_ADCCOUNT;
+*/
 
 /*
  *  =============================== Crypto ===============================
  */
+
 #include <ti/drivers/crypto/CryptoCC26XX.h>
 
 CryptoCC26XX_Object cryptoCC26XXObjects[DASN_CRYPTOCOUNT];
@@ -408,91 +414,6 @@ const AESCTRDRBG_Config AESCTRDRBG_config[DASN_AESCTRDRBGCOUNT] = {
 const uint_least8_t AESCTRDRBG_count = DASN_AESCTRDRBGCOUNT;
 
 /*
- *  =============================== Display ===============================
- */
-#include <ti/display/Display.h>
-#include <ti/display/DisplayUart.h>
-#include <ti/display/DisplaySharp.h>
-
-#ifndef BOARD_DISPLAY_UART_STRBUF_SIZE
-#define BOARD_DISPLAY_UART_STRBUF_SIZE    128
-#endif
-
-/* This value can be changed to 96 for use with the 430BOOST-SHARP96 BoosterPack. */
-#define BOARD_DISPLAY_SHARP_SIZE    128
-
-DisplayUart_Object     displayUartObject;
-DisplaySharp_Object    displaySharpObject;
-
-static char uartStringBuf[BOARD_DISPLAY_UART_STRBUF_SIZE];
-static uint_least8_t sharpDisplayBuf[BOARD_DISPLAY_SHARP_SIZE * BOARD_DISPLAY_SHARP_SIZE / 8];
-
-const DisplayUart_HWAttrs displayUartHWAttrs = {
-    .uartIdx      = DASN_UART0,
-    .baudRate     = 115200,
-    .mutexTimeout = (unsigned int)(-1),
-    .strBuf       = uartStringBuf,
-    .strBufLen    = BOARD_DISPLAY_UART_STRBUF_SIZE,
-};
-
-const DisplaySharp_HWAttrsV1 displaySharpHWattrs = {
-    .spiIndex    = DASN_SPI0,
-    .csPin       = DASN_GPIO_LCD_CS,
-    .powerPin    = DASN_GPIO_LCD_POWER,
-    .enablePin   = DASN_GPIO_LCD_ENABLE,
-    .pixelWidth  = BOARD_DISPLAY_SHARP_SIZE,
-    .pixelHeight = BOARD_DISPLAY_SHARP_SIZE,
-    .displayBuf  = sharpDisplayBuf,
-};
-
-#ifndef BOARD_DISPLAY_USE_UART
-#define BOARD_DISPLAY_USE_UART 1
-#endif
-#ifndef BOARD_DISPLAY_USE_UART_ANSI
-#define BOARD_DISPLAY_USE_UART_ANSI 0
-#endif
-#ifndef BOARD_DISPLAY_USE_LCD
-#define BOARD_DISPLAY_USE_LCD 0
-#endif
-
-/*
- * This #if/#else is needed to workaround a problem with the
- * IAR compiler. The IAR compiler doesn't like the empty array
- * initialization. (IAR Error[Pe1345])
- */
-#if (BOARD_DISPLAY_USE_UART || BOARD_DISPLAY_USE_LCD)
-
-const Display_Config Display_config[] = {
-#if (BOARD_DISPLAY_USE_UART)
-    {
-#  if (BOARD_DISPLAY_USE_UART_ANSI)
-        .fxnTablePtr = &DisplayUartAnsi_fxnTable,
-#  else /* Default to minimal UART with no cursor placement */
-        .fxnTablePtr = &DisplayUartMin_fxnTable,
-#  endif
-        .object      = &displayUartObject,
-        .hwAttrs     = &displayUartHWAttrs,
-    },
-#endif
-#if (BOARD_DISPLAY_USE_LCD)
-    {
-        .fxnTablePtr = &DisplaySharp_fxnTable,
-        .object      = &displaySharpObject,
-        .hwAttrs     = &displaySharpHWattrs
-    },
-#endif
-};
-
-const uint_least8_t Display_count = sizeof(Display_config) / sizeof(Display_Config);
-
-#else
-
-const Display_Config *Display_config = NULL;
-const uint_least8_t Display_count = 0;
-
-#endif /* (BOARD_DISPLAY_USE_UART || BOARD_DISPLAY_USE_LCD) */
-
-/*
  *  =============================== GPIO ===============================
  */
 #include <ti/drivers/GPIO.h>
@@ -589,6 +510,7 @@ const GPTimerCC26XX_Config GPTimerCC26XX_config[DASN_GPTIMERPARTSCOUNT] = {
 /*
  *  =============================== I2C ===============================
 */
+/*
 #include <ti/drivers/I2C.h>
 #include <ti/drivers/i2c/I2CCC26XX.h>
 
@@ -615,10 +537,12 @@ const I2C_Config I2C_config[DASN_I2CCOUNT] = {
 };
 
 const uint_least8_t I2C_count = DASN_I2CCOUNT;
+*/
 
 /*
  *  =============================== I2S ===============================
 */
+/*
 #include <ti/drivers/I2S.h>
 #include <ti/drivers/i2s/I2SCC26XX.h>
 
@@ -643,118 +567,7 @@ const I2S_Config I2S_config[DASN_I2SCOUNT] = {
 };
 
 const uint_least8_t I2S_count = DASN_I2SCOUNT;
-
-/*
- *  =============================== NVS ===============================
- */
-#include <ti/drivers/NVS.h>
-#include <ti/drivers/nvs/NVSSPI25X.h>
-#include <ti/drivers/nvs/NVSCC26XX.h>
-
-#define NVS_REGIONS_BASE 0x1A000
-#define SECTORSIZE       0x1000
-#define REGIONSIZE       (SECTORSIZE * 4)
-
-#ifndef Board_EXCLUDE_NVS_INTERNAL_FLASH
-
-/*
- * Reserve flash sectors for NVS driver use by placing an uninitialized byte
- * array at the desired flash address.
- */
-#if defined(__TI_COMPILER_VERSION__)
-
-/*
- * Place uninitialized array at NVS_REGIONS_BASE
- */
-#pragma LOCATION(flashBuf, NVS_REGIONS_BASE);
-#pragma NOINIT(flashBuf);
-static char flashBuf[REGIONSIZE];
-
-#elif defined(__IAR_SYSTEMS_ICC__)
-
-/*
- * Place uninitialized array at NVS_REGIONS_BASE
- */
-static __no_init char flashBuf[REGIONSIZE] @ NVS_REGIONS_BASE;
-
-#elif defined(__GNUC__)
-
-/*
- * Place the flash buffers in the .nvs section created in the gcc linker file.
- * The .nvs section enforces alignment on a sector boundary but may
- * be placed anywhere in flash memory.  If desired the .nvs section can be set
- * to a fixed address by changing the following in the gcc linker file:
- *
- * .nvs (FIXED_FLASH_ADDR) (NOLOAD) : AT (FIXED_FLASH_ADDR) {
- *      *(.nvs)
- * } > REGION_TEXT
- */
-__attribute__ ((section (".nvs")))
-static char flashBuf[REGIONSIZE];
-
-#endif
-
-/* Allocate objects for NVS Internal Regions */
-NVSCC26XX_Object nvsCC26xxObjects[1];
-
-/* Hardware attributes for NVS Internal Regions */
-const NVSCC26XX_HWAttrs nvsCC26xxHWAttrs[1] = {
-    {
-        .regionBase = (void *)flashBuf,
-        .regionSize = REGIONSIZE,
-    },
-};
-
-#endif /* Board_EXCLUDE_NVS_INTERNAL_FLASH */
-
-#ifndef Board_EXCLUDE_NVS_EXTERNAL_FLASH
-
-#define SPISECTORSIZE    0x1000
-#define SPIREGIONSIZE    (SPISECTORSIZE * 32)
-#define VERIFYBUFSIZE    64
-
-static uint8_t verifyBuf[VERIFYBUFSIZE];
-
-/* Allocate objects for NVS External Regions */
-NVSSPI25X_Object nvsSPI25XObjects[1];
-
-/* Hardware attributes for NVS External Regions */
-const NVSSPI25X_HWAttrs nvsSPI25XHWAttrs[1] = {
-    {
-        .regionBaseOffset = 0,
-        .regionSize = SPIREGIONSIZE,
-        .sectorSize = SPISECTORSIZE,
-        .verifyBuf = verifyBuf,
-        .verifyBufSize = VERIFYBUFSIZE,
-        .spiHandle = NULL,
-        .spiIndex = 0,
-        .spiBitRate = 4000000,
-        .spiCsnGpioIndex = DASN_GPIO_SPI_FLASH_CS,
-        .statusPollDelayUs = 100,
-    },
-};
-
-#endif /* Board_EXCLUDE_NVS_EXTERNAL_FLASH */
-
-/* NVS Region index 0 and 1 refer to NVS and NVS SPI respectively */
-const NVS_Config NVS_config[DASN_NVSCOUNT] = {
-#ifndef Board_EXCLUDE_NVS_INTERNAL_FLASH
-    {
-        .fxnTablePtr = &NVSCC26XX_fxnTable,
-        .object = &nvsCC26xxObjects[0],
-        .hwAttrs = &nvsCC26xxHWAttrs[0],
-    },
-#endif
-#ifndef Board_EXCLUDE_NVS_EXTERNAL_FLASH
-    {
-        .fxnTablePtr = &NVSSPI25X_fxnTable,
-        .object = &nvsSPI25XObjects[0],
-        .hwAttrs = &nvsSPI25XHWAttrs[0],
-    },
-#endif
-};
-
-const uint_least8_t NVS_count = DASN_NVSCOUNT;
+*/
 
 /*
  *  =============================== PIN ===============================
@@ -820,6 +633,7 @@ const PowerCC26XX_Config PowerCC26XX_config = {
  *  =============================== PWM ===============================
  *  Remove unused entries to reduce flash usage both in Board.c and Board.h
  */
+/*
 #include <ti/drivers/PWM.h>
 #include <ti/drivers/pwm/PWMTimerCC26XX.h>
 
@@ -848,6 +662,7 @@ const PWM_Config PWM_config[DASN_PWMCOUNT] = {
 };
 
 const uint_least8_t PWM_count = DASN_PWMCOUNT;
+*/
 
 /*
  *  =============================== RF Driver ===============================
@@ -862,44 +677,22 @@ const RFCC26XX_HWAttrsV2 RFCC26XX_hwAttrs = {
     .globalEventMask    = 0         /* No events subscribed to */
 };
 
-/*
- *  =============================== SD ===============================
- */
-#include <ti/drivers/SD.h>
-#include <ti/drivers/sd/SDSPI.h>
-
-SDSPI_Object sdspiObjects[DASN_SDCOUNT];
-
-const SDSPI_HWAttrs sdspiHWAttrs[DASN_SDCOUNT] = {
-    {
-        .spiIndex = DASN_SPI0,
-        .spiCsGpioIndex = DASN_SDSPI_CS
-    }
-};
-
-const SD_Config SD_config[DASN_SDCOUNT] = {
-    {
-        .fxnTablePtr = &SDSPI_fxnTable,
-        .object = &sdspiObjects[DASN_SDSPI0],
-        .hwAttrs = &sdspiHWAttrs[DASN_SDSPI0]
-    },
-};
-
-const uint_least8_t SD_count = DASN_SDCOUNT;
 
 /*
  *  =============================== SPI DMA ===============================
  */
+/*
 #include <ti/drivers/SPI.h>
 #include <ti/drivers/spi/SPICC26XXDMA.h>
 
 SPICC26XXDMA_Object spiCC26XXDMAObjects[DASN_SPICOUNT];
-
+*/
 /*
  * NOTE: The SPI instances below can be used by the SD driver to communicate
  * with a SD card via SPI.  The 'defaultTxBufValue' fields below are set to 0xFF
  * to satisfy the SDSPI driver requirement.
  */
+/*
 const SPICC26XXDMA_HWAttrsV1 spiCC26XXDMAHWAttrs[DASN_SPICOUNT] = {
     {
         .baseAddr           = SSI0_BASE,
@@ -947,10 +740,12 @@ const SPI_Config SPI_config[DASN_SPICOUNT] = {
 };
 
 const uint_least8_t SPI_count = DASN_SPICOUNT;
+*/
 
 /*
  *  =============================== UART ===============================
  */
+/*
 #include <ti/drivers/UART.h>
 #include <ti/drivers/uart/UARTCC26XX.h>
 
@@ -986,7 +781,7 @@ const UART_Config UART_config[DASN_UARTCOUNT] = {
 };
 
 const uint_least8_t UART_count = DASN_UARTCOUNT;
-
+*/
 /*
  *  =============================== UDMA ===============================
  */
@@ -1078,8 +873,6 @@ void DASN_initGeneral(void)
         while (1);
     }
 
-    /* Perform board-specific initialization */
-    Board_initHook();
 }
 
 /*

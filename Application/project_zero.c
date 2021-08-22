@@ -283,17 +283,17 @@ static uint8_t advertData[] =
     // complete name
     12, // length of this data
     GAP_ADTYPE_LOCAL_NAME_COMPLETE,
-    'P',
-    'r',
-    'o',
-    'j',
-    'e',
-    'c',
-    't',
-    'Z',
-    'e',
-    'r',
-    'o',
+    'D',
+    'A',
+    'S',
+    'N',
+    ' ',
+    'v',
+    '1',
+    '.',
+    '0',
+    '.',
+    '0',
 };
 
 // Scan Response Data
@@ -344,7 +344,6 @@ PIN_Config ledPinTable[] = {
  */
 PIN_Config buttonPinTable[] = {
     Board_PIN_BUTTON0 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE,
-    Board_PIN_BUTTON1 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE,
     PIN_TERMINATE
 };
 
@@ -352,11 +351,11 @@ PIN_Config buttonPinTable[] = {
 static Clock_Struct button0DebounceClock;
 static Clock_Struct button1DebounceClock;
 static Clock_Handle button0DebounceClockHandle;
-static Clock_Handle button1DebounceClockHandle;
+// static Clock_Handle button1DebounceClockHandle; Era del project Zero
 
 // State of the buttons
 static uint8_t button0State = 0;
-static uint8_t button1State = 0;
+// static uint8_t button1State = 0; Era del project Zero
 
 /*********************************************************************
  * LOCAL FUNCTIONS
@@ -586,12 +585,13 @@ static void ProjectZero_init(void)
                                                      0,
                                                      0,
                                                      Board_PIN_BUTTON0);
+/*
     button1DebounceClockHandle = Util_constructClock(&button1DebounceClock,
                                                      buttonDebounceSwiFxn, 50,
                                                      0,
                                                      0,
                                                      Board_PIN_BUTTON1);
-
+*/
     // Set the Device Name characteristic in the GAP GATT Service
     // For more information, see the section in the User's Guide:
     // http://software-dl.ti.com/lprf/ble5stack-latest/
@@ -1818,11 +1818,13 @@ static void ProjectZero_handleButtonPress(pzButtonState_t *pState)
                                    sizeof(pState->state),
                                    &pState->state);
         break;
+/*
     case Board_PIN_BUTTON1:
         ButtonService_SetParameter(BS_BUTTON1_ID,
                                    sizeof(pState->state),
                                    &pState->state);
         break;
+        */
     }
 }
 
@@ -2380,7 +2382,7 @@ static void buttonDebounceSwiFxn(UArg buttonId)
             sendMsg = TRUE;
         }
         break;
-
+/*
     case Board_PIN_BUTTON1:
         // If button is now released (buttonPinVal is active low, so release is 1)
         // and button state was pressed (buttonstate is active high so press is 1)
@@ -2397,6 +2399,7 @@ static void buttonDebounceSwiFxn(UArg buttonId)
             sendMsg = TRUE;
         }
         break;
+        */
     }
 
     if(sendMsg == TRUE)
@@ -2437,9 +2440,10 @@ static void buttonCallbackFxn(PIN_Handle handle, PIN_Id pinId)
     case Board_PIN_BUTTON0:
         Util_startClock((Clock_Struct *)button0DebounceClockHandle);
         break;
+/*
     case Board_PIN_BUTTON1:
         Util_startClock((Clock_Struct *)button1DebounceClockHandle);
-        break;
+        break;*/
     }
 }
 

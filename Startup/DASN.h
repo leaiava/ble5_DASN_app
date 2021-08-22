@@ -111,6 +111,7 @@ extern const PIN_Config BoardGpioInitTable[];
  */
 
 /* Analog Capable DIOs */
+/*
 #define DASN_DIO23_ANALOG          IOID_23
 #define DASN_DIO24_ANALOG          IOID_24
 #define DASN_DIO25_ANALOG          IOID_25
@@ -119,8 +120,10 @@ extern const PIN_Config BoardGpioInitTable[];
 #define DASN_DIO28_ANALOG          IOID_28
 #define DASN_DIO29_ANALOG          IOID_29
 #define DASN_DIO30_ANALOG          IOID_30
+*/
 
 /* Digital IOs */
+/*
 #define DASN_DIO0                  IOID_0
 #define DASN_DIO1_RFSW             IOID_1
 #define DASN_DIO12                 IOID_12
@@ -129,41 +132,55 @@ extern const PIN_Config BoardGpioInitTable[];
 #define DASN_DIO17_TDI             IOID_17
 #define DASN_DIO21                 IOID_21
 #define DASN_DIO22                 IOID_22
+*/
 
 /* Discrete Inputs */
-#define DASN_PIN_BTN1              IOID_13
+/*
+#define DASN_PIN_BTN1              IOID_4
 #define DASN_PIN_BTN2              IOID_14
+*/
 
 /* GPIO */
+/*
 #define DASN_GPIO_LED_ON           1
 #define DASN_GPIO_LED_OFF          0
+*/
 
 /* I2C */
+/*
 #define DASN_I2C0_SCL0             IOID_4
 #define DASN_I2C0_SDA0             IOID_5
+*/
 
 /* I2S */
+/*
 #define DASN_I2S_ADO               IOID_0
 #define DASN_I2S_ADI               IOID_1
 #define DASN_I2S_BCLK              IOID_30
 #define DASN_I2S_MCLK              PIN_UNASSIGNED
 #define DASN_I2S_WCLK              IOID_29
+*/
 
 /* LCD (430BOOST - Sharp96 Rev 1.1) */
-#define DASN_LCD_CS                IOID_24 /* SPI chip select */
-#define DASN_LCD_EXTCOMIN          IOID_12 /* External COM inversion */
-#define DASN_LCD_ENABLE            IOID_22 /* LCD enable */
-#define DASN_LCD_POWER             IOID_23 /* LCD power control */
+/*
+#define DASN_LCD_CS                IOID_24
+#define DASN_LCD_EXTCOMIN          IOID_12
+#define DASN_LCD_ENABLE            IOID_22
+#define DASN_LCD_POWER             IOID_23
 #define DASN_LCD_CS_ON             1
 #define DASN_LCD_CS_OFF            0
+*/
 
 /* LEDs */
+/*
 #define DASN_PIN_LED_ON            1
 #define DASN_PIN_LED_OFF           0
-#define DASN_PIN_RLED              IOID_6
-#define DASN_PIN_GLED              IOID_7
+#define DASN_PIN_RLED              IOID_5
+#define DASN_PIN_GLED              IOID_6
+*/
 
 /* PWM Outputs */
+/*
 #define DASN_PWMPIN0               DASN_PIN_RLED
 #define DASN_PWMPIN1               DASN_PIN_GLED
 #define DASN_PWMPIN2               PIN_UNASSIGNED
@@ -172,27 +189,32 @@ extern const PIN_Config BoardGpioInitTable[];
 #define DASN_PWMPIN5               PIN_UNASSIGNED
 #define DASN_PWMPIN6               PIN_UNASSIGNED
 #define DASN_PWMPIN7               PIN_UNASSIGNED
+*/
 
 /* SPI */
+/*
 #define DASN_SPI_FLASH_CS          IOID_20
 #define DASN_FLASH_CS_ON           0
 #define DASN_FLASH_CS_OFF          1
+*/
 
 /* SPI Board */
-#define DASN_SPI0_MISO             IOID_8          /* RF1.20 */
-#define DASN_SPI0_MOSI             IOID_9          /* RF1.18 */
-#define DASN_SPI0_CLK              IOID_10         /* RF1.16 */
+/*
+#define DASN_SPI0_MISO             IOID_8
+#define DASN_SPI0_MOSI             IOID_9
+#define DASN_SPI0_CLK              IOID_10
 #define DASN_SPI0_CSN              PIN_UNASSIGNED
 #define DASN_SPI1_MISO             PIN_UNASSIGNED
 #define DASN_SPI1_MOSI             PIN_UNASSIGNED
 #define DASN_SPI1_CLK              PIN_UNASSIGNED
 #define DASN_SPI1_CSN              PIN_UNASSIGNED
+*/
 
 /* UART Board */
-#define DASN_UART_RX               IOID_2          /* RXD */
-#define DASN_UART_TX               IOID_3          /* TXD */
-#define DASN_UART_CTS              IOID_19         /* CTS */
-#define DASN_UART_RTS              IOID_18         /* RTS */
+//#define DASN_UART_RX               IOID_2          /* RXD */
+//#define DASN_UART_TX               IOID_3          /* TXD */
+//#define DASN_UART_CTS              IOID_19         /* CTS */
+//#define DASN_UART_RTS              IOID_18         /* RTS */
 
 /* PLACA DASN */
 #define DASN_PULSADOR              IOID_4
@@ -234,20 +256,6 @@ extern const PIN_Config BoardGpioInitTable[];
  *  This function initializes the general board specific settings.
  */
 void DASN_initGeneral(void);
-
-/*!
- *  @brief  Turn off the external flash on LaunchPads
- *
- */
-void DASN_shutDownExtFlash(void);
-
-/*!
- *  @brief  Wake up the external flash present on the board files
- *
- *  This function toggles the chip select for the amount of time needed
- *  to wake the chip up.
- */
-void DASN_wakeUpExtFlash(void);
 
 /*!
  *  @def    DASN_ADCBufName
@@ -398,12 +406,6 @@ typedef enum DASN_GPIOName {
     DASN_GPIO_ADS1299_PWDN,
     DASN_GPIO_SHDN_minusV,
     DASN_UART_TX_CC2640,
-
-    DASN_GPIO_LCD_CS,
-    DASN_GPIO_LCD_POWER,
-    DASN_GPIO_LCD_ENABLE,
-    DASN_GPIO_SPI_FLASH_CS,
-    DASN_SDSPI_CS,
 
     DASN_GPIOCOUNT
 } DASN_GPIOName;

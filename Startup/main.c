@@ -137,6 +137,7 @@ int main()
      *       to remove all impact of Log statements.
      * Note: NULL as Params gives 115200,8,N,1 and Blocking mode */
 
+    /*
     uint32_t currVal = 0;
     PIN_Handle ledPinHandle;
     PIN_State ledPinState;
@@ -153,9 +154,9 @@ int main()
         PIN_setOutputValue(ledPinHandle, DASN_LED1, !currVal);
         PIN_setOutputValue(ledPinHandle, DASN_LED2, currVal);
     }
-
-    UART_init();
-    UartLog_init(UART_open(Board_UART0, NULL));
+*/
+//    UART_init();
+//    UartLog_init(UART_open(Board_UART0, NULL));
 
     /* Initialize ICall module */
     ICall_init();
