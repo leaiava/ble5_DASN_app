@@ -50,14 +50,14 @@ extern "C" {
 
 #define Board_initGeneral()     Board_init()  /* deprecated */
 
-#include "DASN.h"
+#include <DASN_Board.h>
 
 
 #define Board_PIN_BUTTON0       DASN_PULSADOR
-#define Board_PIN_BUTTON1       DASN_PULSADOR
-#define Board_PIN_RLED          DASN_LED1
-#define Board_PIN_GLED          DASN_LED2
-//#define Board_UART0             DASN_UART0
+#define Board_PIN_BUTTON1       DASN_TRIG_IN
+#define Board_PIN_LED1          DASN_LED1
+#define Board_PIN_LED2          DASN_LED2
+#define Board_UART0             DASN_UART0
 
 #ifdef __cplusplus
 }

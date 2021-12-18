@@ -47,6 +47,8 @@
 /*******************************************************************************
  * INCLUDES
  */
+#include <DASN_app.h>
+#include <control.h>
 #include <stdint.h>
 
 #include <xdc/runtime/Error.h>
@@ -64,7 +66,6 @@
 #include <icall.h>
 #include "hal_assert.h"
 #include "bcomdef.h"
-#include "project_zero.h"
 
 #ifndef USE_DEFAULT_USER_CFG
 #include "ble_user_config.h"
@@ -155,8 +156,8 @@ int main()
         PIN_setOutputValue(ledPinHandle, DASN_LED2, currVal);
     }
 */
-//    UART_init();
-//    UartLog_init(UART_open(Board_UART0, NULL));
+    UART_init();
+    UartLog_init(UART_open(Board_UART0, NULL));
 
     /* Initialize ICall module */
     ICall_init();
@@ -164,7 +165,7 @@ int main()
     /* Start tasks of external images - Priority 5 */
     ICall_createRemoteTasks();
 
-    ProjectZero_createTask();
+    DASN_createTask();
 
     /* enable interrupts and start SYS/BIOS */
     BIOS_start();
