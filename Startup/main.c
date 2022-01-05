@@ -47,8 +47,8 @@
 /*******************************************************************************
  * INCLUDES
  */
+#include <Board.h>
 #include <DASN_app.h>
-#include <control.h>
 #include <stdint.h>
 
 #include <xdc/runtime/Error.h>

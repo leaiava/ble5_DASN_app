@@ -626,18 +626,18 @@ const RFCC26XX_HWAttrsV2 RFCC26XX_hwAttrs = {
 /*
  *  =============================== SPI DMA ===============================
  */
-/*
+
 #include <ti/drivers/SPI.h>
 #include <ti/drivers/spi/SPICC26XXDMA.h>
 
 SPICC26XXDMA_Object spiCC26XXDMAObjects[DASN_SPICOUNT];
-*/
+
 /*
  * NOTE: The SPI instances below can be used by the SD driver to communicate
  * with a SD card via SPI.  The 'defaultTxBufValue' fields below are set to 0xFF
  * to satisfy the SDSPI driver requirement.
  */
-/*
+
 const SPICC26XXDMA_HWAttrsV1 spiCC26XXDMAHWAttrs[DASN_SPICOUNT] = {
     {
         .baseAddr           = SSI0_BASE,
@@ -648,25 +648,10 @@ const SPICC26XXDMA_HWAttrsV1 spiCC26XXDMAHWAttrs[DASN_SPICOUNT] = {
         .defaultTxBufValue  = 0xFF,
         .rxChannelBitMask   = 1<<UDMA_CHAN_SSI0_RX,
         .txChannelBitMask   = 1<<UDMA_CHAN_SSI0_TX,
-        .mosiPin            = DASN_SPI0_MOSI,
-        .misoPin            = DASN_SPI0_MISO,
-        .clkPin             = DASN_SPI0_CLK,
-        .csnPin             = DASN_SPI0_CSN,
-        .minDmaTransferSize = 10
-    },
-    {
-        .baseAddr           = SSI1_BASE,
-        .intNum             = INT_SSI1_COMB,
-        .intPriority        = ~0,
-        .swiPriority        = 0,
-        .powerMngrId        = PowerCC26XX_PERIPH_SSI1,
-        .defaultTxBufValue  = 0xFF,
-        .rxChannelBitMask   = 1<<UDMA_CHAN_SSI1_RX,
-        .txChannelBitMask   = 1<<UDMA_CHAN_SSI1_TX,
-        .mosiPin            = DASN_SPI1_MOSI,
-        .misoPin            = DASN_SPI1_MISO,
-        .clkPin             = DASN_SPI1_CLK,
-        .csnPin             = DASN_SPI1_CSN,
+        .mosiPin            = DASN_ADS1299_MOSI,
+        .misoPin            = DASN_ADS1299_MISO,
+        .clkPin             = DASN_ADS1299_SCLK,
+        .csnPin             = DASN_ADS1299_CS,
         .minDmaTransferSize = 10
     }
 };
@@ -676,16 +661,11 @@ const SPI_Config SPI_config[DASN_SPICOUNT] = {
          .fxnTablePtr = &SPICC26XXDMA_fxnTable,
          .object      = &spiCC26XXDMAObjects[DASN_SPI0],
          .hwAttrs     = &spiCC26XXDMAHWAttrs[DASN_SPI0]
-    },
-    {
-         .fxnTablePtr = &SPICC26XXDMA_fxnTable,
-         .object      = &spiCC26XXDMAObjects[DASN_SPI1],
-         .hwAttrs     = &spiCC26XXDMAHWAttrs[DASN_SPI1]
-    },
+    }
 };
 
 const uint_least8_t SPI_count = DASN_SPICOUNT;
-*/
+
 
 /*
  *  =============================== UART ===============================

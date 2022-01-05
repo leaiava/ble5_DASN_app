@@ -2,14 +2,13 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-SHELL = cmd.exe
-
-CG_TOOL_ROOT := C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
+CG_TOOL_ROOT := /home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
 
 GEN_OPTS__FLAG := --cmd_file="configPkg/compiler.opt" 
 GEN_CMDS__FLAG := -l"configPkg/linker.cmd" 
 
 ORDERED_OBJS += \
+"./Application/DASN_ADS1299.obj" \
 "./Application/DASN_app.obj" \
 "./Application/util.obj" \
 "./Application/services/button_service.obj" \
@@ -31,22 +30,22 @@ ORDERED_OBJS += \
 "./Startup/ccfg_app_ble.obj" \
 "./Startup/main.obj" \
 $(GEN_CMDS__FLAG) \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/devices/cc26x0r2/driverlib/bin/ccs/driverlib.lib" \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/dpl/lib/dpl_cc26x0r2.aem3" \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/lib/drivers_cc26x0r2.aem3" \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/rf/lib/rf_singleMode_cc26x0r2.aem3" \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/display/lib/display.aem3" \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/grlib/lib/ccs/m3/grlib.a" \
--l"C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble_r2.symbols" \
--l"C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/lib_linker.cmd" \
--l"C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib" \
--l"C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/ccs/cc26xx_app.cmd" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/devices/cc26x0r2/driverlib/bin/ccs/driverlib.lib" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/dpl/lib/dpl_cc26x0r2.aem3" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/lib/drivers_cc26x0r2.aem3" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/rf/lib/rf_singleMode_cc26x0r2.aem3" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/display/lib/display.aem3" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/grlib/lib/ccs/m3/grlib.a" \
+-l"/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble_r2.symbols" \
+-l"/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/lib_linker.cmd" \
+-l"/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib" \
+-l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/ccs/cc26xx_app.cmd" \
 -llibc.a \
 
 -include ../makefile.init
 
-RM := DEL /F
-RMDIR := RMDIR /S/Q
+RM := rm -rf
+RMDIR := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
@@ -183,13 +182,13 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@$(MAKE) --no-print-directory -Onone "ble5_DASN_app.out"
 
 dependents:
-	-cd C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library && $(MAKE) all
+	-cd /home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library && $(MAKE) all
 
 # Tool invocations
-ble5_DASN_app.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib
+ble5_DASN_app.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) /home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" --cmd_file="C:/Users/Lea/workspace_v10/ble5_DASN_app/TOOLS/defines/ble5_project_zero_cc2640r2lp_app_FlashROM_StackLibrary.opt" --cmd_file="C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/build_components.opt" --cmd_file="C:/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/factory_config.opt" --cmd_file="C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/TOOLS/build_config.opt"  -mv7M4 --code_state=16 -me -O2 --opt_for_speed=0 --define=DeviceFamily_CC26X0R2 --define=uartlog_FILE="\"\"" --define=UARTLOG_ENABLE -g --c99 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"ble5_DASN_app.map" --heap_size=0 --stack_size=256 -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --define=CC26X0ROM=2 --diag_suppress=16002-D --diag_suppress=10247-D --diag_suppress=10325-D --diag_suppress=10229-D --diag_suppress=16032-D --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ble5_DASN_app_linkInfo.xml" --rom_model -o "ble5_DASN_app.out" $(ORDERED_OBJS)
+	"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" --cmd_file="/home/lea/workspace_v10/ble5_DASN_app/TOOLS/defines/ble5_project_zero_cc2640r2lp_app_FlashROM_StackLibrary.opt" --cmd_file="/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/build_components.opt" --cmd_file="/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/factory_config.opt" --cmd_file="/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/TOOLS/build_config.opt"  -mv7M4 --code_state=16 -me -O2 --opt_for_speed=0 --define=DeviceFamily_CC26X0R2 --define=uartlog_FILE="\"\"" --define=UARTLOG_ENABLE -g --c99 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"ble5_DASN_app.map" --heap_size=0 --stack_size=256 -i"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --define=CC26X0ROM=2 --diag_suppress=16002-D --diag_suppress=10247-D --diag_suppress=10325-D --diag_suppress=10229-D --diag_suppress=16032-D --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ble5_DASN_app_linkInfo.xml" --rom_model -o "ble5_DASN_app.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -197,7 +196,7 @@ ble5_DASN_app.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/Users/Lea/workspace_v10/bl
 ble5_DASN_app.hex: $(EXE_OUTPUTS)
 	@echo 'Building secondary target: "$@"'
 	@echo 'Invoking: Arm Hex Utility'
-	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex" --memwidth=8 --romwidth=8 --diag_wrap=off --intel -o "ble5_DASN_app.hex" $(EXE_OUTPUTS__QUOTED)
+	"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex" --memwidth=8 --romwidth=8 --diag_wrap=off --intel -o "ble5_DASN_app.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building secondary target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -205,19 +204,19 @@ ble5_DASN_app.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "Application\DASN_app.obj" "Application\util.obj" "Application\services\button_service.obj" "Application\services\data_service.obj" "Application\services\led_service.obj" "Drivers\ECC\ECCROMCC26XX.obj" "Drivers\TRNG\TRNGCC26XX.obj" "ICall\icall.obj" "ICall\icall_cc2650.obj" "ICall\icall_user_config.obj" "ICallBLE\ble_user_config.obj" "ICallBLE\icall_api_lite.obj" "PROFILES\devinfoservice.obj" "PROFILES\gatt_uuid.obj" "PROFILES\gattservapp_util.obj" "Startup\DASN_Board.obj" "Startup\DASN_Board_fxns.obj" "Startup\UartLog.obj" "Startup\ccfg_app_ble.obj" "Startup\main.obj" 
-	-$(RM) "Application\DASN_app.d" "Application\util.d" "Application\services\button_service.d" "Application\services\data_service.d" "Application\services\led_service.d" "Drivers\ECC\ECCROMCC26XX.d" "Drivers\TRNG\TRNGCC26XX.d" "ICall\icall.d" "ICall\icall_cc2650.d" "ICall\icall_user_config.d" "ICallBLE\ble_user_config.d" "ICallBLE\icall_api_lite.d" "PROFILES\devinfoservice.d" "PROFILES\gatt_uuid.d" "PROFILES\gattservapp_util.d" "Startup\DASN_Board.d" "Startup\DASN_Board_fxns.d" "Startup\UartLog.d" "Startup\ccfg_app_ble.d" "Startup\main.d" 
+	-$(RM) "Application/DASN_ADS1299.obj" "Application/DASN_app.obj" "Application/util.obj" "Application/services/button_service.obj" "Application/services/data_service.obj" "Application/services/led_service.obj" "Drivers/ECC/ECCROMCC26XX.obj" "Drivers/TRNG/TRNGCC26XX.obj" "ICall/icall.obj" "ICall/icall_cc2650.obj" "ICall/icall_user_config.obj" "ICallBLE/ble_user_config.obj" "ICallBLE/icall_api_lite.obj" "PROFILES/devinfoservice.obj" "PROFILES/gatt_uuid.obj" "PROFILES/gattservapp_util.obj" "Startup/DASN_Board.obj" "Startup/DASN_Board_fxns.obj" "Startup/UartLog.obj" "Startup/ccfg_app_ble.obj" "Startup/main.obj" 
+	-$(RM) "Application/DASN_ADS1299.d" "Application/DASN_app.d" "Application/util.d" "Application/services/button_service.d" "Application/services/data_service.d" "Application/services/led_service.d" "Drivers/ECC/ECCROMCC26XX.d" "Drivers/TRNG/TRNGCC26XX.d" "ICall/icall.d" "ICall/icall_cc2650.d" "ICall/icall_user_config.d" "ICallBLE/ble_user_config.d" "ICallBLE/icall_api_lite.d" "PROFILES/devinfoservice.d" "PROFILES/gatt_uuid.d" "PROFILES/gattservapp_util.d" "Startup/DASN_Board.d" "Startup/DASN_Board_fxns.d" "Startup/UartLog.d" "Startup/ccfg_app_ble.d" "Startup/main.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '
 
 post-build:
-	-C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex -order MS --memwidth=8 --romwidth=8 --intel -o ble5_DASN_app.hex ble5_DASN_app.out
+	-/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex -order MS --memwidth=8 --romwidth=8 --intel -o ble5_DASN_app.hex ble5_DASN_app.out
 	-@echo ' '
 
 .PHONY: all clean dependents
 .SECONDARY:
-C:/Users/Lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib:
+/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib:
 
 -include ../makefile.targets
 

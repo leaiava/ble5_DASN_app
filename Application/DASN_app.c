@@ -271,7 +271,7 @@ static Queue_Struct appMsgQueue;
 static Queue_Handle appMsgQueueHandle;
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "DASN V.1.0.0";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "DASN V.1.0.1";
 
 // Advertisement data
 static uint8_t advertData[] =
@@ -293,7 +293,7 @@ static uint8_t advertData[] =
     '.',
     '0',
     '.',
-    '0',
+    '1',
 };
 
 // Scan Response Data
