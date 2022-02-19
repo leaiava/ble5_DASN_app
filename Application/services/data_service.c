@@ -81,10 +81,10 @@ CONST uint8_t DataServiceUUID[ATT_UUID_SIZE] =
     DATA_SERVICE_SERV_UUID_BASE128(DATA_SERVICE_SERV_UUID)
 };
 
-// String UUID
-CONST uint8_t ds_StringUUID[ATT_UUID_SIZE] =
+// CMD UUID
+CONST uint8_t ds_CmdUUID[ATT_UUID_SIZE] =
 {
-    DS_STRING_UUID_BASE128(DS_STRING_UUID)
+    DS_CMD_UUID_BASE128(DS_CMD_UUID)
 };
 
 // Stream UUID
@@ -107,14 +107,14 @@ static uint8_t ds_icall_rsp_task_id = INVALID_TASK_ID;
 // Service declaration
 static CONST gattAttrType_t DataServiceDecl = { ATT_UUID_SIZE, DataServiceUUID };
 
-// Characteristic "String" Properties (for declaration)
-static uint8_t ds_StringProps = GATT_PROP_READ | GATT_PROP_WRITE;
+// Characteristic "CMD" Properties (for declaration)
+static uint8_t ds_CmdProps = GATT_PROP_READ | GATT_PROP_WRITE;
 
-// Characteristic "String" Value variable
-static uint8_t ds_StringVal[DS_STRING_LEN] = {0};
+// Characteristic "Cmd" Value variable
+static uint8_t ds_CmdVal[DS_CMD_LEN] = {0};
 
-// Length of data in characteristic "String" Value variable, initialized to minimal size.
-static uint16_t ds_StringValLen = DS_STRING_LEN_MIN;
+// Length of data in characteristic "Cmd" Value variable, initialized to minimal size.
+static uint16_t ds_CmdValLen = DS_CMD_LEN_MIN;
 
 // Characteristic "Stream" Properties (for declaration)
 static uint8_t ds_StreamProps = GATT_PROP_READ | GATT_PROP_NOTIFY | GATT_PROP_WRITE_NO_RSP;
@@ -141,19 +141,19 @@ static gattAttribute_t Data_ServiceAttrTbl[] =
         0,
         (uint8_t *)&DataServiceDecl
     },
-    // String Characteristic Declaration
+    // Cmd Characteristic Declaration
     {
         { ATT_BT_UUID_SIZE, characterUUID },
         GATT_PERMIT_READ,
         0,
-        &ds_StringProps
+        &ds_CmdProps
     },
-    // String Characteristic Value
+    // Cmd Characteristic Value
     {
-        { ATT_UUID_SIZE, ds_StringUUID },
+        { ATT_UUID_SIZE, ds_CmdUUID },
         GATT_PERMIT_READ | GATT_PERMIT_WRITE,
         0,
-        ds_StringVal
+        ds_CmdVal
     },
     // Stream Characteristic Declaration
     {
@@ -288,12 +288,12 @@ bStatus_t DataService_SetParameter(uint8_t param, uint16_t len, void *value)
 
     switch(param)
     {
-    case DS_STRING_ID:
-        pAttrVal = ds_StringVal;
-        pValLen = &ds_StringValLen;
-        valMinLen = DS_STRING_LEN_MIN;
-        valMaxLen = DS_STRING_LEN;
-        Log_info2("SetParameter : %s len: %d", (uintptr_t)"String", len);
+    case DS_CMD_ID:
+        pAttrVal = ds_CmdVal;
+        pValLen = &ds_CmdValLen;
+        valMinLen = DS_CMD_LEN_MIN;
+        valMaxLen = DS_CMD_LEN;
+        Log_info2("SetParameter : %s len: %d", (uintptr_t)"Cmd", len);
         break;
 
     case DS_STREAM_ID:
@@ -363,10 +363,10 @@ bStatus_t DataService_GetParameter(uint8_t param, uint16_t *len, void *value)
     bStatus_t ret = SUCCESS;
     switch(param)
     {
-    case DS_STRING_ID:
-        *len = MIN(*len, ds_StringValLen);
-        memcpy(value, ds_StringVal, *len);
-        Log_info2("GetParameter : %s returning %d bytes", (uintptr_t)"String",
+    case DS_CMD_ID:
+        *len = MIN(*len, ds_CmdValLen);
+        memcpy(value, ds_CmdVal, *len);
+        Log_info2("GetParameter : %s returning %d bytes", (uintptr_t)"Cmd",
                   *len);
         break;
 
@@ -406,12 +406,12 @@ static uint8_t Data_Service_findCharParamId(gattAttribute_t *pAttr)
     {
         return(Data_Service_findCharParamId(pAttr - 1)); // Assume the value attribute precedes CCCD and recurse
     }
-    // Is this attribute in "String"?
+    // Is this attribute in "Cmd"?
 
     else if(ATT_UUID_SIZE == pAttr->type.len &&
-            !memcmp(pAttr->type.uuid, ds_StringUUID, pAttr->type.len))
+            !memcmp(pAttr->type.uuid, ds_CmdUUID, pAttr->type.len))
     {
-        return(DS_STRING_ID);
+        return(DS_CMD_ID);
     }
     // Is this attribute in "Stream"?
     else if(ATT_UUID_SIZE == pAttr->type.len &&
@@ -455,15 +455,15 @@ static bStatus_t Data_Service_ReadAttrCB(uint16_t connHandle,
     paramID = Data_Service_findCharParamId(pAttr);
     switch(paramID)
     {
-    case DS_STRING_ID:
-        valueLen = ds_StringValLen;
+    case DS_CMD_ID:
+        valueLen = ds_CmdValLen;
 
         Log_info4("ReadAttrCB : %s connHandle: %d offset: %d method: 0x%02x",
-                  (uintptr_t)"String",
+                  (uintptr_t)"Cmd",
                   connHandle,
                   offset,
                   method);
-        /* Other considerations for String can be inserted here */
+        /* Other considerations for Cmd can be inserted here */
         break;
 
     case DS_STREAM_ID:
@@ -554,19 +554,19 @@ static bStatus_t Data_Service_WriteAttrCB(uint16_t connHandle,
     paramID = Data_Service_findCharParamId(pAttr);
     switch(paramID)
     {
-    case DS_STRING_ID:
-        writeLenMin = DS_STRING_LEN_MIN;
-        writeLenMax = DS_STRING_LEN;
-        pValueLenVar = &ds_StringValLen;
+    case DS_CMD_ID:
+        writeLenMin = DS_CMD_LEN_MIN;
+        writeLenMax = DS_CMD_LEN;
+        pValueLenVar = &ds_CmdValLen;
 
         Log_info5(
             "WriteAttrCB : %s connHandle(%d) len(%d) offset(%d) method(0x%02x)",
-            (uintptr_t)"String",
+            (uintptr_t)"Cmd",
             connHandle,
             len,
             offset,
             method);
-        /* Other considerations for String can be inserted here */
+        /* Other considerations for Cmd can be inserted here */
         break;
 
     case DS_STREAM_ID:

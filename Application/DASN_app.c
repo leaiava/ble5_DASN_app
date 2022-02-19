@@ -647,14 +647,14 @@ static void DASN_init(void)
 
     // Placeholder variable for characteristic intialization
     uint8_t initVal[40] = {0};
-    uint8_t initString[] = "This is a pretty long string, isn't it!";
+    uint8_t initCmd[] = "This is a pretty long Cmd, isn't it!";
 
     // Initalization of characteristics in Button_Service that can provide data.
     ButtonService_SetParameter(BS_BUTTON0_ID, BS_BUTTON0_LEN, initVal);
     ButtonService_SetParameter(BS_BUTTON1_ID, BS_BUTTON1_LEN, initVal);
 
     // Initalization of characteristics in Data_Service that can provide data.
-    DataService_SetParameter(DS_STRING_ID, sizeof(initString), initString);
+    DataService_SetParameter(DS_CMD_ID, sizeof(initCmd), initCmd);
     DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, initVal);
 
     // Start Bond Manager and register callback
@@ -1015,7 +1015,7 @@ static void ProjectZero_processGapMessage(gapEventHdr_t *pMsg)
                                  systemId);
 
             // Display device address
-            // Need static so string persists until printed in idle thread.
+            // Need static so Cmd persists until printed in idle thread.
             static uint8_t addrStr[3 * B_ADDR_LEN + 1];
             util_arrtohex(pPkt->devAddr, B_ADDR_LEN, addrStr, sizeof addrStr,
                           UTIL_ARRTOHEX_REVERSE);
@@ -1853,22 +1853,22 @@ void ProjectZero_ButtonService_CfgChangeHandler(
 {
     // Cast received data to uint16, as that's the format for CCCD writes.
     uint16_t configValue = *(uint16_t *)pCharData->data;
-    char *configValString;
+    char *configValCmd;
 
     // Determine what to tell the user
     switch(configValue)
     {
     case GATT_CFG_NO_OPERATION:
-        configValString = "Noti/Ind disabled";
+        configValCmd = "Noti/Ind disabled";
         break;
     case GATT_CLIENT_CFG_NOTIFY:
-        configValString = "Notifications enabled";
+        configValCmd = "Notifications enabled";
         break;
     case GATT_CLIENT_CFG_INDICATE:
-        configValString = "Indications enabled";
+        configValCmd = "Indications enabled";
         break;
     default:
-        configValString = "Unsupported operation";
+        configValCmd = "Unsupported operation";
     }
 
     switch(pCharData->paramID)
@@ -1877,7 +1877,7 @@ void ProjectZero_ButtonService_CfgChangeHandler(
         Log_info3("CCCD Change msg: %s %s: %s",
                   (uintptr_t)"Button Service",
                   (uintptr_t)"BUTTON0",
-                  (uintptr_t)configValString);
+                  (uintptr_t)configValCmd);
         // -------------------------
         // Do something useful with configValue here. It tells you whether someone
         // wants to know the state of this characteristic.
@@ -1888,7 +1888,7 @@ void ProjectZero_ButtonService_CfgChangeHandler(
         Log_info3("CCCD Change msg: %s %s: %s",
                   (uintptr_t)"Button Service",
                   (uintptr_t)"BUTTON1",
-                  (uintptr_t)configValString);
+                  (uintptr_t)configValCmd);
         // -------------------------
         // Do something useful with configValue here. It tells you whether someone
         // wants to know the state of this characteristic.
@@ -1913,25 +1913,25 @@ void ProjectZero_ButtonService_CfgChangeHandler(
 void DASN_DataService_ValueChangeHandler(
     pzCharacteristicData_t *pCharData)
 {
-    // Value to hold the received string for printing via Log, as Log printouts
+    // Value to hold the received Cmd for printing via Log, as Log printouts
     // happen in the Idle task, and so need to refer to a global/static variable.
-    static uint8_t received_string[DS_STRING_LEN] = {0};
+    static uint8_t received_Cmd[DS_CMD_LEN] = {0};
 
     switch(pCharData->paramID)
     {
-    case DS_STRING_ID:
+    case DS_CMD_ID:
         // Do something useful with pCharData->data here
         // -------------------------
         // Copy received data to holder array, ensuring NULL termination.
-        memset(received_string, 0, DS_STRING_LEN);
-        memcpy(received_string, pCharData->data,
-               MIN(pCharData->dataLen, DS_STRING_LEN - 1));
+        memset(received_Cmd, 0, DS_CMD_LEN);
+        memcpy(received_Cmd, pCharData->data,
+               MIN(pCharData->dataLen, DS_CMD_LEN - 1));
         // Needed to copy before log statement, as the holder array remains after
         // the pCharData message has been freed and reused for something else.
         Log_info3("Value Change msg: %s %s: %s",
                   (uintptr_t)"Data Service",
-                  (uintptr_t)"String",
-                  (uintptr_t)received_string);
+                  (uintptr_t)"Cmd",
+                  (uintptr_t)received_Cmd);
         break;
 
     case DS_STREAM_ID:
@@ -1961,22 +1961,22 @@ void ProjectZero_DataService_CfgChangeHandler(pzCharacteristicData_t *pCharData)
 {
     // Cast received data to uint16, as that's the format for CCCD writes.
     uint16_t configValue = *(uint16_t *)pCharData->data;
-    char *configValString;
+    char *configValCmd;
 
     // Determine what to tell the user
     switch(configValue)
     {
     case GATT_CFG_NO_OPERATION:
-        configValString = "Noti/Ind disabled";
+        configValCmd = "Noti/Ind disabled";
         break;
     case GATT_CLIENT_CFG_NOTIFY:
-        configValString = "Notifications enabled";
+        configValCmd = "Notifications enabled";
         break;
     case GATT_CLIENT_CFG_INDICATE:
-        configValString = "Indications enabled";
+        configValCmd = "Indications enabled";
         break;
     default:
-        configValString = "Unsupported operation";
+        configValCmd = "Unsupported operation";
     }
 
     switch(pCharData->paramID)
@@ -1985,17 +1985,17 @@ void ProjectZero_DataService_CfgChangeHandler(pzCharacteristicData_t *pCharData)
         Log_info3("CCCD Change msg: %s %s: %s",
                   (uintptr_t)"Data Service",
                   (uintptr_t)"Stream",
-                  (uintptr_t)configValString);
+                  (uintptr_t)configValCmd);
         // -------------------------
         // Do something useful with configValue here. It tells you whether someone
         // wants to know the state of this characteristic.
         // ...
         break;
-    case DS_STRING_ID:
+    case DS_CMD_ID:
         Log_info3("CCCD Change msg: %s %s: %s",
                   (uintptr_t)"Data Service",
-                  (uintptr_t)"String",
-                  (uintptr_t)configValString);
+                  (uintptr_t)"Cmd",
+                  (uintptr_t)configValCmd);
         // -------------------------
         // Do something useful with configValue here. It tells you whether someone
         // wants to know the state of this characteristic.
@@ -2420,10 +2420,10 @@ bStatus_t DASN_enqueueMsg(uint8_t event, void *pData)
  *
  * @param   src - source byte-array
  * @param   src_len - length of array
- * @param   dst - destination string-array
+ * @param   dst - destination Cmd-array
  * @param   dst_len - length of array
  *
- * @return  array as string
+ * @return  array as Cmd
  */
 char * util_arrtohex(uint8_t const *src, uint8_t src_len,
                      uint8_t *dst, uint8_t dst_len, uint8_t reverse)
@@ -2470,7 +2470,7 @@ char * util_arrtohex(uint8_t const *src, uint8_t src_len,
  * @param   data - Pointer to the advertisement or scan response data
  * @param   len  - Length of advertisment or scan repsonse data
  *
- * @return  Pointer to null-terminated string with the adv local name.
+ * @return  Pointer to null-terminated Cmd with the adv local name.
  */
 static char * util_getLocalNameStr(const uint8_t *data, uint8_t len)
 {
