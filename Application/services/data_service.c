@@ -117,7 +117,7 @@ static uint8_t ds_StringVal[DS_STRING_LEN] = {0};
 static uint16_t ds_StringValLen = DS_STRING_LEN_MIN;
 
 // Characteristic "Stream" Properties (for declaration)
-static uint8_t ds_StreamProps = GATT_PROP_NOTIFY | GATT_PROP_WRITE_NO_RSP;
+static uint8_t ds_StreamProps = GATT_PROP_READ | GATT_PROP_NOTIFY | GATT_PROP_WRITE_NO_RSP;
 
 // Characteristic "Stream" Value variable
 static uint8_t ds_StreamVal[DS_STREAM_LEN] = {0};
@@ -165,7 +165,7 @@ static gattAttribute_t Data_ServiceAttrTbl[] =
     // Stream Characteristic Value
     {
         { ATT_UUID_SIZE, ds_StreamUUID },
-        GATT_PERMIT_WRITE,
+        GATT_PERMIT_READ | GATT_PERMIT_WRITE,
         0,
         ds_StreamVal
     },
@@ -230,6 +230,7 @@ extern bStatus_t DataService_AddService(uint8_t rspTaskId)
 
     // Initialize Client Characteristic Configuration attributes
     GATTServApp_InitCharCfg(CONNHANDLE_INVALID, ds_StreamConfig);
+
     // Register GATT attribute list and CBs with GATT Server App
     status = GATTServApp_RegisterService(Data_ServiceAttrTbl,
                                          GATT_NUM_ATTRS(Data_ServiceAttrTbl),
@@ -406,6 +407,7 @@ static uint8_t Data_Service_findCharParamId(gattAttribute_t *pAttr)
         return(Data_Service_findCharParamId(pAttr - 1)); // Assume the value attribute precedes CCCD and recurse
     }
     // Is this attribute in "String"?
+
     else if(ATT_UUID_SIZE == pAttr->type.len &&
             !memcmp(pAttr->type.uuid, ds_StringUUID, pAttr->type.len))
     {

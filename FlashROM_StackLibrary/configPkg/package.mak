@@ -15,90 +15,90 @@ XDCCFGDIR = package/cfg/
 # in the event that some included BOM script changes.
 #
 ifneq (clean,$(MAKECMDGOALS))
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/utils.js:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/utils.js
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xdc.tci:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xdc.tci
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/template.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/template.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/om2.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/om2.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen2.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen2.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/Warnings.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/Warnings.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/IPackage.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/IPackage.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/package.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/package.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Clock.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Clock.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Trace.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Trace.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/bld.js:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/bld.js
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/BuildEnvironment.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/BuildEnvironment.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/PackageContents.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/PackageContents.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/_gen.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/_gen.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Library.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Library.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Executable.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Executable.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Repository.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Repository.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Configuration.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Configuration.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Script.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Script.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Manifest.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Manifest.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Utils.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Utils.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget2.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget2.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget3.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget3.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITargetFilter.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITargetFilter.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/package.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/package.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/utils.js:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/utils.js
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xdc.tci:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xdc.tci
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/template.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/template.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/om2.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/om2.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen2.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/xmlgen2.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/Warnings.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/Warnings.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/IPackage.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/IPackage.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/package.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/package.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Clock.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Clock.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Trace.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/Trace.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/bld.js:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/bld.js
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/BuildEnvironment.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/BuildEnvironment.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/PackageContents.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/PackageContents.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/_gen.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/_gen.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Library.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Library.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Executable.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Executable.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Repository.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Repository.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Configuration.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Configuration.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Script.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Script.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Manifest.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Manifest.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Utils.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/Utils.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget2.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget2.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget3.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITarget3.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITargetFilter.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/ITargetFilter.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/package.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/bld/package.xs
 package.mak: config.bld
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/ITarget.xs:
-package.mak: /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/ITarget.xs
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_large.xs:
-package.mak: /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_large.xs
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_float.xs:
-package.mak: /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_float.xs
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/package.xs:
-package.mak: /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/package.xs
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/IArm.xs:
-package.mak: /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/IArm.xs
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/package.xs:
-package.mak: /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/package.xs
+/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/ITarget.xs:
+package.mak: /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/ITarget.xs
+/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_large.xs:
+package.mak: /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_large.xs
+/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_float.xs:
+package.mak: /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/C28_float.xs
+/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/package.xs:
+package.mak: /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/package.xs
+/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/IArm.xs:
+package.mak: /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/IArm.xs
+/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/package.xs:
+package.mak: /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/package.xs
 package.mak: package.bld
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.opt.xdt:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.opt.xdt
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/File.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/File.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/package.xs:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/package.xs
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.defs.xdt:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.defs.xdt
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/custom.mak.exe.xdt:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/custom.mak.exe.xdt
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/package.xs.xdt:
-package.mak: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/package.xs.xdt
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.opt.xdt:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.opt.xdt
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/File.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/File.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/package.xs:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/io/package.xs
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.defs.xdt:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/compiler.defs.xdt
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/custom.mak.exe.xdt:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/custom.mak.exe.xdt
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/package.xs.xdt:
+package.mak: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/tools/configuro/template/package.xs.xdt
 endif
 
-ti.targets.arm.elf.M3.rootDir ?= /home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
-ti.targets.arm.elf.packageBase ?= /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/
+ti.targets.arm.elf.M3.rootDir ?= /home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
+ti.targets.arm.elf.packageBase ?= /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/
 .PRECIOUS: $(XDCCFGDIR)/%.oem3
 .PHONY: all,em3 .dlls,em3 .executables,em3 test,em3
 all,em3: .executables,em3

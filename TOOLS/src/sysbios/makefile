@@ -6,22 +6,22 @@
 #  template: ti.sysbios.rom.cortexm.cc26xx.r2/CC26xx_custom_makefile.xdt
 #  target: ti.targets.arm.elf.M3
 
-vpath % /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/sysbios/
-vpath %.c /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/
+vpath % /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/sysbios/
+vpath %.c /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/
 
-XOPTS = -I"/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/" -Dxdc_target_types__=/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/std.h -Dxdc_target_name__=M3
+XOPTS = -I"/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/" -Dxdc_target_types__=/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/targets/arm/elf/std.h -Dxdc_target_name__=M3
 
 BIOS_DEFS =  -Dti_sysbios_BIOS_swiEnabled__D=TRUE -Dti_sysbios_BIOS_taskEnabled__D=TRUE -Dti_sysbios_BIOS_clockEnabled__D=TRUE -Dti_sysbios_BIOS_runtimeCreatesEnabled__D=TRUE -Dti_sysbios_knl_Task_moduleStateCheckFlag__D=FALSE -Dti_sysbios_knl_Task_objectCheckFlag__D=FALSE -Dti_sysbios_hal_Hwi_DISABLE_ALL_HOOKS -Dti_sysbios_knl_Swi_DISABLE_ALL_HOOKS -Dti_sysbios_BIOS_smpEnabled__D=FALSE -Dti_sysbios_Build_useHwiMacros -Dti_sysbios_Build_useIndirectReferences=FALSE -Dti_sysbios_knl_Swi_numPriorities__D=6 -Dti_sysbios_knl_Task_deleteTerminatedTasks__D=FALSE -Dti_sysbios_knl_Task_numPriorities__D=6 -Dti_sysbios_knl_Task_checkStackFlag__D=FALSE -Dti_sysbios_knl_Task_initStackFlag__D=TRUE -Dti_sysbios_knl_Task_DISABLE_ALL_HOOKS -Dti_sysbios_knl_Clock_TICK_SOURCE=ti_sysbios_knl_Clock_TickSource_TIMER -Dti_sysbios_knl_Clock_TICK_MODE=ti_sysbios_knl_Clock_TickMode_DYNAMIC -Dti_sysbios_hal_Core_delegate_getId=ti_sysbios_hal_CoreNull_getId__E -Dti_sysbios_hal_Core_delegate_interruptCore=ti_sysbios_hal_CoreNull_interruptCore__E -Dti_sysbios_hal_Core_delegate_lock=ti_sysbios_hal_CoreNull_lock__E -Dti_sysbios_hal_Core_delegate_unlock=ti_sysbios_hal_CoreNull_unlock__E -Dti_sysbios_hal_Core_numCores__D=1 -Dti_sysbios_hal_CoreNull_numCores__D=1 -Dti_sysbios_utils_Load_taskEnabled__D=TRUE -Dti_sysbios_utils_Load_swiEnabled__D=FALSE -Dti_sysbios_utils_Load_hwiEnabled__D=FALSE -Dti_sysbios_family_arm_m3_Hwi_dispatcherSwiSupport__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_dispatcherTaskSupport__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_dispatcherAutoNestingSupport__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_dispatcherIrpTrackingSupport__D=TRUE -Dti_sysbios_knl_Semaphore_supportsEvents__D=FALSE -Dti_sysbios_knl_Semaphore_supportsPriority__D=FALSE -Dxdc_runtime_Assert_DISABLE_ALL -Dxdc_runtime_Log_DISABLE_ALL --define=DeviceFamily_CC26X0R2 --define=uartlog_FILE="""" --define=UARTLOG_ENABLE 
 
 CCOPTS = --endian=little -mv7M3 --abi=eabi -q -ms --opt_for_speed=0  --program_level_compile -o3 -g  -Dti_sysbios_family_arm_cc26xx_Boot_driverlibVersion=2 -Dti_sysbios_knl_Clock_stopCheckNext__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_enableException__D=TRUE -Dti_sysbios_family_arm_m3_Hwi_disablePriority__D=32U -Dti_sysbios_family_arm_m3_Hwi_numSparseInterrupts__D=0U -Dti_sysbios_knl_Task_minimizeLatency__D=FALSE
 
-BIOS_INC = -I"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/"
+BIOS_INC = -I"/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/"
 ANNEX_INCS = 
-INCS = $(BIOS_INC) $(ANNEX_INCS) -I"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/" -I"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/" -I"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/" -I"/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/" -I"../" -I"/packages//"  -I/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include 
+INCS = $(BIOS_INC) $(ANNEX_INCS) -I"/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/" -I"/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/" -I"/home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/" -I"/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/" -I"../" -I"/packages//"  -I/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include 
 
-CC = /home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl -c $(CCOPTS)
-ASM = /home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl -c $(CCOPTS)
-AR = /home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armar rq
+CC = /home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl -c $(CCOPTS)
+ASM = /home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl -c $(CCOPTS)
+AR = /home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armar rq
 
 DEL = rm -f
 CP = cp -f
@@ -62,7 +62,7 @@ rom_sysbios.obj: BIOS.c knl/Clock.c knl/Idle.c knl/Intrinsics.c knl/Event.c knl/
 rom_sysbios.aem3: rom_sysbios.obj m3_Hwi_asm.obj m3_Hwi_asm_switch.obj m3_IntrinsicsSupport_asm.obj m3_TaskSupport_asm.obj
 	@-$(call RM, $@)
 	@echo arem3 $^ ...
-	@$(AR) $@ $^ /home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/sysbios/rom/cortexm/cc26xx/r2/golden/CC26xx/rom_sysbios_config.obj
+	@$(AR) $@ $^ /home/leandro/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/sysbios/rom/cortexm/cc26xx/r2/golden/CC26xx/rom_sysbios_config.obj
 
 clean:
 	@$(DEL) ../makefile.libs

@@ -6,7 +6,7 @@
 C_SRCS += \
 ../Application/DASN_ADS1299.c \
 ../Application/DASN_app.c \
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/util.c 
+/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/util.c 
 
 C_DEPS += \
 ./Application/DASN_ADS1299.d \
@@ -31,6 +31,6 @@ C_DEPS__QUOTED += \
 C_SRCS__QUOTED += \
 "../Application/DASN_ADS1299.c" \
 "../Application/DASN_app.c" \
-"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/util.c" 
+"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/util.c" 
 
 

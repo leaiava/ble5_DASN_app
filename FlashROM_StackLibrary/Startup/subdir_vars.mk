@@ -6,7 +6,7 @@
 C_SRCS += \
 ../Startup/DASN_Board.c \
 ../Startup/DASN_Board_fxns.c \
-/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/examples/rtos/CC2640R2_LAUNCHXL/ble5stack/project_zero/src/extra/uartlog/UartLog.c \
+/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/examples/rtos/CC2640R2_LAUNCHXL/ble5stack/project_zero/src/extra/uartlog/UartLog.c \
 ../Startup/ccfg_app_ble.c \
 ../Startup/main.c 
 
@@ -41,7 +41,7 @@ C_DEPS__QUOTED += \
 C_SRCS__QUOTED += \
 "../Startup/DASN_Board.c" \
 "../Startup/DASN_Board_fxns.c" \
-"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/examples/rtos/CC2640R2_LAUNCHXL/ble5stack/project_zero/src/extra/uartlog/UartLog.c" \
+"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/examples/rtos/CC2640R2_LAUNCHXL/ble5stack/project_zero/src/extra/uartlog/UartLog.c" \
 "../Startup/ccfg_app_ble.c" \
 "../Startup/main.c" 
 

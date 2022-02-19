@@ -30,24 +30,24 @@ xdc/IPackage.xdc:
 vpath xdc/IPackage.xdc $(XPKGVPATH)
 
 ifneq (clean,$(MAKECMDGOALS))
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/tar.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/tar.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/gen/java/package.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/gen/java/package.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/cmd/java/package.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/cmd/java/package.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/java/package.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/java/package.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/spec/java/package.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/spec/java/package.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/xsr/java/package.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/xsr/java/package.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/antlr.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/antlr.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/ecj.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/ecj.jar
-/home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/js.jar:
-package/package.xdc.inc: /home/lea/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/js.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/xsr/java/package.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/xsr/java/package.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/gen/java/package.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/gen/java/package.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/js.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/js.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/java/package.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/global/java/package.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/cmd/java/package.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/intern/cmd/java/package.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/tar.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/tar.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/ecj.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/ecj.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/spec/java/package.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/services/spec/java/package.jar
+/home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/antlr.jar:
+package/package.xdc.inc: /home/leandro/ti/ccs1040/xdctools_3_62_01_15_core/packages/xdc/shelf/java/antlr.jar
 endif
 # goals for files generated during schema generation but unspecified by schema's pattern rule
 

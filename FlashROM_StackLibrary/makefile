@@ -2,7 +2,7 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
+CG_TOOL_ROOT := /home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS
 
 GEN_OPTS__FLAG := --cmd_file="configPkg/compiler.opt" 
 GEN_CMDS__FLAG := -l"configPkg/linker.cmd" 
@@ -30,16 +30,16 @@ ORDERED_OBJS += \
 "./Startup/ccfg_app_ble.obj" \
 "./Startup/main.obj" \
 $(GEN_CMDS__FLAG) \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/devices/cc26x0r2/driverlib/bin/ccs/driverlib.lib" \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/dpl/lib/dpl_cc26x0r2.aem3" \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/lib/drivers_cc26x0r2.aem3" \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/rf/lib/rf_singleMode_cc26x0r2.aem3" \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/display/lib/display.aem3" \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/grlib/lib/ccs/m3/grlib.a" \
--l"/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble_r2.symbols" \
--l"/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/lib_linker.cmd" \
--l"/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib" \
--l"/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/ccs/cc26xx_app.cmd" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/devices/cc26x0r2/driverlib/bin/ccs/driverlib.lib" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/kernel/tirtos/packages/ti/dpl/lib/dpl_cc26x0r2.aem3" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/lib/drivers_cc26x0r2.aem3" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/drivers/rf/lib/rf_singleMode_cc26x0r2.aem3" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/display/lib/display.aem3" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/grlib/lib/ccs/m3/grlib.a" \
+-l"/home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble_r2.symbols" \
+-l"/home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/lib_linker.cmd" \
+-l"/home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib" \
+-l"/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/common/cc26xx/ccs/cc26xx_app.cmd" \
 -llibc.a \
 
 -include ../makefile.init
@@ -182,13 +182,13 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@$(MAKE) --no-print-directory -Onone "ble5_DASN_app.out"
 
 dependents:
-	-cd /home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library && $(MAKE) all
+	-cd /home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library && $(MAKE) all
 
 # Tool invocations
-ble5_DASN_app.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) /home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib
+ble5_DASN_app.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) /home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" --cmd_file="/home/lea/workspace_v10/ble5_DASN_app/TOOLS/defines/ble5_project_zero_cc2640r2lp_app_FlashROM_StackLibrary.opt" --cmd_file="/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/build_components.opt" --cmd_file="/home/lea/ti/simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/factory_config.opt" --cmd_file="/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/TOOLS/build_config.opt"  -mv7M4 --code_state=16 -me -O2 --opt_for_speed=0 --define=DeviceFamily_CC26X0R2 --define=uartlog_FILE="\"\"" --define=UARTLOG_ENABLE -g --c99 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"ble5_DASN_app.map" --heap_size=0 --stack_size=256 -i"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --define=CC26X0ROM=2 --diag_suppress=16002-D --diag_suppress=10247-D --diag_suppress=10325-D --diag_suppress=10229-D --diag_suppress=16032-D --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ble5_DASN_app_linkInfo.xml" --rom_model -o "ble5_DASN_app.out" $(ORDERED_OBJS)
+	"/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armcl" --cmd_file="/home/leandro/ti/workspace_v10/ble5_DASN_app/TOOLS/defines/ble5_project_zero_cc2640r2lp_app_FlashROM_StackLibrary.opt" --cmd_file="/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/build_components.opt" --cmd_file="/home/leandro/ti/-simplelink_cc2640r2_sdk_5_10_00_02/source/ti/ble5stack/config/factory_config.opt" --cmd_file="/home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/TOOLS/build_config.opt"  -mv7M4 --code_state=16 -me -O2 --opt_for_speed=0 --define=DeviceFamily_CC26X0R2 --define=uartlog_FILE="\"\"" --define=UARTLOG_ENABLE -g --c99 --gcc --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --abi=eabi -z -m"ble5_DASN_app.map" --heap_size=0 --stack_size=256 -i"/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/lib" -i"/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/include" --reread_libs --define=CC26X0ROM=2 --diag_suppress=16002-D --diag_suppress=10247-D --diag_suppress=10325-D --diag_suppress=10229-D --diag_suppress=16032-D --diag_wrap=off --display_error_number --warn_sections --xml_link_info="ble5_DASN_app_linkInfo.xml" --rom_model -o "ble5_DASN_app.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -196,7 +196,7 @@ ble5_DASN_app.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) /home/lea/workspace_v10/ble5_
 ble5_DASN_app.hex: $(EXE_OUTPUTS)
 	@echo 'Building secondary target: "$@"'
 	@echo 'Invoking: Arm Hex Utility'
-	"/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex" --memwidth=8 --romwidth=8 --diag_wrap=off --intel -o "ble5_DASN_app.hex" $(EXE_OUTPUTS__QUOTED)
+	"/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex" --memwidth=8 --romwidth=8 --diag_wrap=off --intel -o "ble5_DASN_app.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building secondary target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -211,12 +211,12 @@ clean:
 	-@echo ' '
 
 post-build:
-	-/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex -order MS --memwidth=8 --romwidth=8 --intel -o ble5_DASN_app.hex ble5_DASN_app.out
+	-/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS/bin/armhex -order MS --memwidth=8 --romwidth=8 --intel -o ble5_DASN_app.hex ble5_DASN_app.out
 	-@echo ' '
 
 .PHONY: all clean dependents
 .SECONDARY:
-/home/lea/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib:
+/home/leandro/ti/workspace_v10/ble5_project_zero_cc2640r2lp_stack_library/FlashROM_Library/ble5_project_zero_cc2640r2lp_stack_library.lib:
 
 -include ../makefile.targets
 

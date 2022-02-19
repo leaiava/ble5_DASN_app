@@ -20,7 +20,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.CC2640R2F.ccxml.Texas Instruments XDS110 USB Debug Probe_0/Cortex_M3_0" value="ble5_DASN_app"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:ble5_DASN_app}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.CC2640R2F.ccxml.Texas Instruments XDS110 USB Debug Probe/Cortex_M3_0" value="C:\Users\Lea\workspace_v10\ble5_DASN_app\FlashROM_StackLibrary\ble5_DASN_app.out"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.CC2640R2F.ccxml.Texas Instruments XDS110 USB Debug Probe_0/Cortex_M3_0" value="/home/lea/workspace_v10/ble5_DASN_app/FlashROM_StackLibrary/ble5_DASN_app.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.CC2640R2F.ccxml.Texas Instruments XDS110 USB Debug Probe_0/Cortex_M3_0" value="/home/leandro/ti/workspace_v10/ble5_DASN_app/FlashROM_StackLibrary/ble5_DASN_app.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/ble5_DASN_app"/>
 </listAttribute>

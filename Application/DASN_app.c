@@ -83,6 +83,7 @@
 #include <Board.h>
 
 #include <DASN_app.h>
+#include <DASN_ADS1299.h>
 #include <util.h>
 
 /*********************************************************************
@@ -115,7 +116,7 @@
 
 // Types of messages that can be sent to the user application task from other
 // tasks or interrupts. Note: Messages from BLE Stack are sent differently.
-#define PZ_SERVICE_WRITE_EVT     0  /* A characteristic value has been written     */
+#define DASN_SERVICE_WRITE_EVT   0  /* A characteristic value has been written     */
 #define PZ_SERVICE_CFG_EVT       1  /* A characteristic configuration has changed  */
 #define PZ_UPDATE_CHARVAL_EVT    2  /* Request from ourselves to update a value    */
 #define PZ_BUTTON_DEBOUNCED_EVT  3  /* A button has been debounced with new value  */
@@ -125,15 +126,17 @@
 #define PZ_START_ADV_EVT         7  /* Request advertisement start from task ctx   */
 #define PZ_SEND_PARAM_UPD_EVT    8  /* Request parameter update req be sent        */
 #define PZ_CONN_EVT              9  /* Connection Event End notice                 */
+//#define DASN_NEW_DATA_EVT      10 /* New data from ADS1299, defined in DASN_ADS1299.h */
+//#define DASN_TRANSFER_COMPLETE 11
 
 // General discoverable mode: advertise indefinitely
 #define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_GENERAL
 
 // Minimum connection interval (units of 1.25ms, 80=100ms) for parameter update request
-#define DEFAULT_DESIRED_MIN_CONN_INTERVAL     12
+#define DEFAULT_DESIRED_MIN_CONN_INTERVAL     6
 
 // Maximum connection interval (units of 1.25ms, 800=1000ms) for  parameter update request
-#define DEFAULT_DESIRED_MAX_CONN_INTERVAL     36
+#define DEFAULT_DESIRED_MAX_CONN_INTERVAL     6
 
 // Slave latency to use for parameter update request
 #define DEFAULT_DESIRED_SLAVE_LATENCY         0
@@ -258,7 +261,8 @@ uint8_t appTaskStack[DASN_TASK_STACK_SIZE];
 /*********************************************************************
  * LOCAL VARIABLES
  */
-
+// Contador para bajar la frecuencia de refresco de la interrupcion del DRDY
+static uint8_t counter=0;
 // Entity ID globally used to check for source and/or destination of messages
 static ICall_EntityID selfEntity;
 
@@ -271,7 +275,7 @@ static Queue_Struct appMsgQueue;
 static Queue_Handle appMsgQueueHandle;
 
 // GAP GATT Attributes
-static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "DASN V.1.0.1";
+static uint8_t attDeviceName[GAP_DEVICE_NAME_LEN] = "DASN V.1.0.0";
 
 // Advertisement data
 static uint8_t advertData[] =
@@ -293,7 +297,7 @@ static uint8_t advertData[] =
     '.',
     '0',
     '.',
-    '1',
+    '0',
 };
 
 // Scan Response Data
@@ -325,6 +329,8 @@ static PIN_Handle ledPinHandle;
 /* Global memory storage for a PIN_Config table */
 static PIN_State buttonPinState;
 static PIN_State ledPinState;
+
+
 
 /*
  * Initial LED pin configuration table
@@ -378,11 +384,13 @@ static void ProjectZero_processAdvEvent(pzGapAdvEventData_t *pEventData);
 
 /* Profile value change handlers */
 static void ProjectZero_updateCharVal(pzCharacteristicData_t *pCharData);
+
 static void ProjectZero_LedService_ValueChangeHandler(
     pzCharacteristicData_t *pCharData);
+
 static void ProjectZero_ButtonService_CfgChangeHandler(
     pzCharacteristicData_t *pCharData);
-static void ProjectZero_DataService_ValueChangeHandler(
+static void DASN_DataService_ValueChangeHandler(
     pzCharacteristicData_t *pCharData);
 static void ProjectZero_DataService_CfgChangeHandler(
     pzCharacteristicData_t *pCharData);
@@ -404,6 +412,7 @@ static void ProjectZero_LedService_ValueChangeCB(uint16_t connHandle,
                                                  uint8_t paramID,
                                                  uint16_t len,
                                                  uint8_t *pValue);
+
 static void ProjectZero_DataService_ValueChangeCB(uint16_t connHandle,
                                                   uint8_t paramID,
                                                   uint16_t len,
@@ -433,13 +442,13 @@ static void ProjectZero_processConnEvt(Gap_ConnEventRpt_t *pReport);
 
 /* Button handling functions */
 static void buttonDebounceSwiFxn(UArg buttonId);
-static void buttonCallbackFxn(PIN_Handle handle,
-                              PIN_Id pinId);
+static void buttonCallbackFxn(PIN_Handle handle,PIN_Id pinId);
+
 static void ProjectZero_handleButtonPress(pzButtonState_t *pState);
+static void DASN_handleNewData(void* pdata);
 
 /* Utility functions */
-static status_t ProjectZero_enqueueMsg(uint8_t event,
-                                   void *pData);
+
 static char * util_arrtohex(uint8_t const *src,
                             uint8_t src_len,
                             uint8_t       *dst,
@@ -455,7 +464,12 @@ extern void AssertHandler(uint8_t assertCause,
                           uint8_t assertSubcause);
 
 /*********************************************************************
- * PROFILE CALLBACKS
+ * EXTERN VARIABLES
+ */
+extern uint8_t rxbuf[32];
+
+/*********************************************************************
+* PROFILE CALLBACKS
  */
 // GAP Bond Manager Callbacks
 static gapBondCBs_t ProjectZero_BondMgrCBs =
@@ -469,6 +483,7 @@ static gapBondCBs_t ProjectZero_BondMgrCBs =
  */
 // LED Service callback handler.
 // The type LED_ServiceCBs_t is defined in led_service.h
+
 static LedServiceCBs_t ProjectZero_LED_ServiceCBs =
 {
     .pfnChangeCb = ProjectZero_LedService_ValueChangeCB,  // Characteristic value change callback handler
@@ -591,6 +606,7 @@ static void DASN_init(void)
                                                      0,
                                                      Board_PIN_BUTTON1);
 */
+
     // Set the Device Name characteristic in the GAP GATT Service
     // For more information, see the section in the User's Guide:
     // http://software-dl.ti.com/lprf/ble5stack-latest/
@@ -710,6 +726,8 @@ static void DASN_taskFxn(UArg a0, UArg a1)
 {
     // Initialize application
     DASN_init();
+
+    ADS1299_init();
 
     // Application main loop
     for(;; )
@@ -893,7 +911,7 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
           AssertHandler(HAL_ASSERT_CAUSE_HARDWARE_ERROR,0);
           break;
 
-      case PZ_SERVICE_WRITE_EVT: /* Message about received value write */
+      case DASN_SERVICE_WRITE_EVT: /* Message about received value write */
           /* Call different handler per service */
           switch(pCharData->svcUUID)
           {
@@ -901,7 +919,7 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
                 ProjectZero_LedService_ValueChangeHandler(pCharData);
                 break;
             case DATA_SERVICE_SERV_UUID:
-                ProjectZero_DataService_ValueChangeHandler(pCharData);
+                DASN_DataService_ValueChangeHandler(pCharData);
                 break;
           }
           break;
@@ -964,6 +982,13 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
       case PZ_CONN_EVT:
         ProjectZero_processConnEvt((Gap_ConnEventRpt_t *)(pMsg->pData));
         break;
+
+      case DASN_NEW_DATA_EVT: /* Message from swi about newe data */
+      {
+          //uint8_t *pdata = (uint8_t *)pMsg->pData;              //TODO: Ver que variable viene en pMsg
+          DASN_handleNewData(pMsg->pData);
+      }
+      break;
 
       default:
         break;
@@ -1819,6 +1844,7 @@ static void ProjectZero_handleButtonPress(pzButtonState_t *pState)
         ButtonService_SetParameter(BS_BUTTON0_ID,
                                    sizeof(pState->state),
                                    &pState->state);
+
         break;
 /*
     case Board_PIN_BUTTON1:
@@ -1829,7 +1855,16 @@ static void ProjectZero_handleButtonPress(pzButtonState_t *pState)
         */
     }
 }
+/**
+ * @brief   Handle a new data from ADS1299
+ */
+static void DASN_handleNewData(void* pdata)
+{
+    Log_info0("New data from ADS1299");
 
+    DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, rxbuf);
+
+}
 /*
  * @brief   Handle a write request sent from a peer device.
  *
@@ -1843,6 +1878,7 @@ static void ProjectZero_handleButtonPress(pzButtonState_t *pState)
  *
  * @return  None.
  */
+
 void ProjectZero_LedService_ValueChangeHandler(
     pzCharacteristicData_t *pCharData)
 {
@@ -1959,7 +1995,7 @@ void ProjectZero_ButtonService_CfgChangeHandler(
  *
  * @return  None.
  */
-void ProjectZero_DataService_ValueChangeHandler(
+void DASN_DataService_ValueChangeHandler(
     pzCharacteristicData_t *pCharData)
 {
     // Value to hold the received string for printing via Log, as Log printouts
@@ -2040,6 +2076,16 @@ void ProjectZero_DataService_CfgChangeHandler(pzCharacteristicData_t *pCharData)
         // wants to know the state of this characteristic.
         // ...
         break;
+    case DS_STRING_ID:
+        Log_info3("CCCD Change msg: %s %s: %s",
+                  (uintptr_t)"Data Service",
+                  (uintptr_t)"String",
+                  (uintptr_t)configValString);
+        // -------------------------
+        // Do something useful with configValue here. It tells you whether someone
+        // wants to know the state of this characteristic.
+        // ...
+        break;
     }
 }
 
@@ -2056,8 +2102,11 @@ static void ProjectZero_updateCharVal(pzCharacteristicData_t *pCharData)
     switch(pCharData->svcUUID)
     {
     case LED_SERVICE_SERV_UUID:
+
         LedService_SetParameter(pCharData->paramID, pCharData->dataLen,
                                 pCharData->data);
+
+
         break;
 
     case BUTTON_SERVICE_SERV_UUID:
@@ -2100,7 +2149,7 @@ static void ProjectZero_advCallback(uint32_t event, void *pBuf, uintptr_t arg)
         eventData->event = event;
         eventData->pBuf = pBuf;
 
-        if(ProjectZero_enqueueMsg(PZ_ADV_EVT, eventData) != SUCCESS)
+        if(DASN_enqueueMsg(PZ_ADV_EVT, eventData) != SUCCESS)
         {
           ICall_free(eventData);
         }
@@ -2128,7 +2177,7 @@ static void ProjectZero_pairStateCb(uint16_t connHandle, uint8_t state,
         pairState->connHandle = connHandle;
         pairState->status = status;
 
-        if(ProjectZero_enqueueMsg(PZ_PAIRSTATE_EVT, pairState) != SUCCESS)
+        if(DASN_enqueueMsg(PZ_PAIRSTATE_EVT, pairState) != SUCCESS)
         {
           ICall_free(pairState);
         }
@@ -2162,7 +2211,7 @@ static void ProjectZero_passcodeCb(uint8_t *pDeviceAddr,
         req->uiOutputs = uiOutputs;
         req->numComparison = numComparison;
 
-        if(ProjectZero_enqueueMsg(PZ_PASSCODE_EVT, req) != SUCCESS)
+        if(DASN_enqueueMsg(PZ_PASSCODE_EVT, req) != SUCCESS)
         {
           ICall_free(req);
         }
@@ -2180,6 +2229,7 @@ static void ProjectZero_passcodeCb(uint8_t *pDeviceAddr,
  *          len - length of the data written
  *          pValue - pointer to the data written
  */
+
 static void ProjectZero_LedService_ValueChangeCB(uint16_t connHandle,
                                                  uint8_t paramID, uint16_t len,
                                                  uint8_t *pValue)
@@ -2198,12 +2248,13 @@ static void ProjectZero_LedService_ValueChangeCB(uint16_t connHandle,
         memcpy(pValChange->data, pValue, len);
         pValChange->dataLen = len;
 
-        if(ProjectZero_enqueueMsg(PZ_SERVICE_WRITE_EVT, pValChange) != SUCCESS)
+        if(DASN_enqueueMsg(DASN_SERVICE_WRITE_EVT, pValChange) != SUCCESS)
         {
           ICall_free(pValChange);
         }
     }
 }
+
 
 /*********************************************************************
  * @fn      ProjectZero_DataService_ValueChangeCB
@@ -2233,7 +2284,7 @@ static void ProjectZero_DataService_ValueChangeCB(uint16_t connHandle,
         memcpy(pValChange->data, pValue, len);
         pValChange->dataLen = len;
 
-        if(ProjectZero_enqueueMsg(PZ_SERVICE_WRITE_EVT, pValChange) != SUCCESS)
+        if(DASN_enqueueMsg(DASN_SERVICE_WRITE_EVT, pValChange) != SUCCESS)
         {
           ICall_free(pValChange);
         }
@@ -2268,7 +2319,7 @@ static void ProjectZero_ButtonService_CfgChangeCB(uint16_t connHandle,
         memcpy(pValChange->data, pValue, len);
         pValChange->dataLen = len;
 
-        if(ProjectZero_enqueueMsg(PZ_SERVICE_CFG_EVT, pValChange) != SUCCESS)
+        if(DASN_enqueueMsg(PZ_SERVICE_CFG_EVT, pValChange) != SUCCESS)
         {
           ICall_free(pValChange);
         }
@@ -2303,7 +2354,7 @@ static void ProjectZero_DataService_CfgChangeCB(uint16_t connHandle,
         memcpy(pValChange->data, pValue, len);
         pValChange->dataLen = len;
 
-        if(ProjectZero_enqueueMsg(PZ_SERVICE_CFG_EVT, pValChange) != SUCCESS)
+        if(DASN_enqueueMsg(PZ_SERVICE_CFG_EVT, pValChange) != SUCCESS)
         {
           ICall_free(pValChange);
         }
@@ -2328,7 +2379,7 @@ static void ProjectZero_paramUpdClockHandler(UArg arg)
     if(req)
     {
         req->connHandle = (uint16_t)arg;
-        if(ProjectZero_enqueueMsg(PZ_SEND_PARAM_UPD_EVT, req) != SUCCESS)
+        if(DASN_enqueueMsg(PZ_SEND_PARAM_UPD_EVT, req) != SUCCESS)
         {
           ICall_free(req);
         }
@@ -2419,7 +2470,7 @@ static void buttonDebounceSwiFxn(UArg buttonId)
         if(pButtonState != NULL)
         {
             *pButtonState = buttonMsg;
-            if(ProjectZero_enqueueMsg(PZ_BUTTON_DEBOUNCED_EVT, pButtonState) != SUCCESS)
+            if(DASN_enqueueMsg(PZ_BUTTON_DEBOUNCED_EVT, pButtonState) != SUCCESS)
             {
               ICall_free(pButtonState);
             }
@@ -2467,7 +2518,7 @@ static void buttonCallbackFxn(PIN_Handle handle, PIN_Id pinId)
  *****************************************************************************/
 
 /*********************************************************************
- * @fn     ProjectZero_enqueueMsg
+ * @fn     DASN_enqueueMsg
  *
  * @brief  Utility function that sends the event and data to the application.
  *         Handled in the task loop.
@@ -2475,7 +2526,7 @@ static void buttonCallbackFxn(PIN_Handle handle, PIN_Id pinId)
  * @param  event    Event type
  * @param  pData    Pointer to message data
  */
-static status_t ProjectZero_enqueueMsg(uint8_t event, void *pData)
+bStatus_t DASN_enqueueMsg(uint8_t event, void *pData)
 {
     uint8_t success;
     pzMsg_t *pMsg = ICall_malloc(sizeof(pzMsg_t));

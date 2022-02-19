@@ -7,7 +7,7 @@
         <srcFile name="package/cfg/app_ble_pem3.c"/>
     </sources>
     <configscripts>
-        <srcFile name="/home/lea/workspace_v10/ble5_DASN_app/TOOLS/app_ble.cfg"/>
+        <srcFile name="/home/leandro/ti/workspace_v10/ble5_DASN_app/TOOLS/app_ble.cfg"/>
     </configscripts>
     <makefiles>
         <srcFile name="package.mak" src="package.bld"/>
@@ -25,7 +25,7 @@
             platform="ti.platforms.simCM3"
             isa="v7M"
             suffix="em3"
-            rootDir="/home/lea/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS"
+            rootDir="/home/leandro/ti/ccs1040/ccs/tools/compiler/ti-cgt-arm_20.2.5.LTS"
             os="undefined"
             rts="ti.targets.arm.rtsarm">
             <model endian="little"
@@ -44,7 +44,7 @@
         isPartial="false"
         xCfgScript="package/cfg/app_ble_pem3.cfg"
         xCfgPrefix="package/cfg/app_ble_pem3"
-        cfgScript="/home/lea/workspace_v10/ble5_DASN_app/TOOLS/app_ble.cfg"
+        cfgScript="/home/leandro/ti/workspace_v10/ble5_DASN_app/TOOLS/app_ble.cfg"
         cfgArgs="null"
         />
     </configurations>
@@ -56,7 +56,7 @@
         profile="release"
         xCfgScript="package/cfg/app_ble_pem3.cfg"
         xCfgPrefix="package/cfg/app_ble_pem3"
-        cfgScript="/home/lea/workspace_v10/ble5_DASN_app/TOOLS/app_ble.cfg"
+        cfgScript="/home/leandro/ti/workspace_v10/ble5_DASN_app/TOOLS/app_ble.cfg"
         cfgArgs="null"
         />
     </executables>

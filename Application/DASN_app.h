@@ -81,11 +81,11 @@ extern "C"
 /*********************************************************************
  * FUNCTIONS
  */
-
+bStatus_t DASN_enqueueMsg(uint8_t event, void *pData);
 /*
  * Task creation function for the Project Zero.
  */
-extern void DASN_createTask(void);
+void DASN_createTask(void);
 
 /*********************************************************************
 *********************************************************************/

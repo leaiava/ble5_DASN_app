@@ -49,6 +49,7 @@
  */
 #include <Board.h>
 #include <DASN_app.h>
+
 #include <stdint.h>
 
 #include <xdc/runtime/Error.h>
@@ -166,7 +167,7 @@ int main()
     ICall_createRemoteTasks();
 
     DASN_createTask();
-
+    //DASN_ADS1299_createTask();
     /* enable interrupts and start SYS/BIOS */
     BIOS_start();
 

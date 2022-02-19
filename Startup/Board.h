@@ -58,6 +58,7 @@ extern "C" {
 #define Board_PIN_LED1          DASN_LED1
 #define Board_PIN_LED2          DASN_LED2
 #define Board_UART0             DASN_UART0
+#define Board_nDRDY             DASN_ADS1299_DRDY
 
 #ifdef __cplusplus
 }
