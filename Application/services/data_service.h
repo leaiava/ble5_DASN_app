@@ -68,21 +68,29 @@ extern "C"
     0x00, 0xB0, 0x00, 0x40, 0x51, 0x04, LO_UINT16(uuid), HI_UINT16(uuid), 0x00, \
     0xF0
 
-// Cmd Characteristic defines
-#define DS_CMD_ID                 0
-#define DS_CMD_UUID               0x1131
-#define DS_CMD_UUID_BASE128(uuid) 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+// Cmd rcv Characteristic defines
+#define DS_CMD_RCV_ID                 0
+#define DS_CMD_RCV_UUID               0x1131
+#define DS_CMD_RCV_UUID_BASE128(uuid) 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0xB0, 0x00, 0x40, 0x51, 0x04, LO_UINT16(uuid), HI_UINT16(uuid), 0x00, 0xF0
-#define DS_CMD_LEN                40
-#define DS_CMD_LEN_MIN            0
+#define DS_CMD_RCV_LEN                1
+#define DS_CMD_RCV_LEN_MIN            0
+
+// Cmd snd Characteristic defines
+#define DS_CMD_SND_ID                 1
+#define DS_CMD_SND_UUID               0x1132
+#define DS_CMD_SND_UUID_BASE128(uuid) 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+    0xB0, 0x00, 0x40, 0x51, 0x04, LO_UINT16(uuid), HI_UINT16(uuid), 0x00, 0xF0
+#define DS_CMD_SND_LEN                1
+#define DS_CMD_SND_LEN_MIN            0
 
 // Stream Characteristic defines
-#define DS_STREAM_ID                 1
-#define DS_STREAM_UUID               0x1132
-#define DS_STREAM_UUID_BASE128(uuid) 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+#define DS_STREAM_ID                  2
+#define DS_STREAM_UUID                0x1133
+#define DS_STREAM_UUID_BASE128(uuid)  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
     0xB0, 0x00, 0x40, 0x51, 0x04, LO_UINT16(uuid), HI_UINT16(uuid), 0x00, 0xF0
-#define DS_STREAM_LEN                32
-#define DS_STREAM_LEN_MIN            0
+#define DS_STREAM_LEN                 32
+#define DS_STREAM_LEN_MIN             0
 
 /*********************************************************************
  * TYPEDEFS

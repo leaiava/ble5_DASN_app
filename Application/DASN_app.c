@@ -116,9 +116,9 @@
 // Types of messages that can be sent to the user application task from other
 // tasks or interrupts. Note: Messages from BLE Stack are sent differently.
 #define DASN_SERVICE_WRITE_EVT   0  /* A characteristic value has been written     */
-#define PZ_SERVICE_CFG_EVT       1  /* A characteristic configuration has changed  */
+#define DASN_SERVICE_CFG_EVT     1  /* A characteristic configuration has changed  */
 #define PZ_UPDATE_CHARVAL_EVT    2  /* Request from ourselves to update a value    */
-#define PZ_BUTTON_DEBOUNCED_EVT  3  /* A button has been debounced with new value  */
+#define DASN_BUTTON_DEBOUNCED_EVT 3 /* A button has been debounced with new value  */
 #define PZ_PAIRSTATE_EVT         4  /* The pairing state is updated                */
 #define PZ_PASSCODE_EVT          5  /* A pass-code/PIN is requested during pairing */
 #define PZ_ADV_EVT               6  /* A subscribed advertisement activity         */
@@ -382,7 +382,7 @@ static void ProjectZero_processAdvEvent(pzGapAdvEventData_t *pEventData);
 
 static void DASN_DataService_ValueChangeHandler(
     pzCharacteristicData_t *pCharData);
-static void ProjectZero_DataService_CfgChangeHandler(
+static void DASN_DataService_CfgChangeHandler(
     pzCharacteristicData_t *pCharData);
 
 /* Stack or profile callback function */
@@ -425,7 +425,7 @@ static void ProjectZero_processConnEvt(Gap_ConnEventRpt_t *pReport);
 static void buttonDebounceSwiFxn(UArg buttonId);
 static void buttonCallbackFxn(PIN_Handle handle,PIN_Id pinId);
 
-static void ProjectZero_handleButtonPress(pzButtonState_t *pState);
+static void DASN_handleButtonPress(pzButtonState_t *pState);
 static void DASN_handleNewData(void* pdata);
 
 /* Utility functions */
@@ -619,10 +619,11 @@ static void DASN_init(void)
 
     // Placeholder variable for characteristic intialization
     uint8_t initVal[40] = {0};
-    uint8_t initCmd[] = "This is a pretty long Cmd, isn't it!";
-
+    uint8_t initCmdRcv = 0;
+    uint8_t initCmdSnd = 0;
     // Initalization of characteristics in Data_Service that can provide data.
-    DataService_SetParameter(DS_CMD_ID, sizeof(initCmd), initCmd);
+    DataService_SetParameter(DS_CMD_RCV_ID, sizeof(initCmdRcv), &initCmdRcv);
+    DataService_SetParameter(DS_CMD_SND_ID, sizeof(initCmdSnd), &initCmdSnd);
     DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, initVal);
 
     // Start Bond Manager and register callback
@@ -866,12 +867,12 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
           }
           break;
 
-      case PZ_SERVICE_CFG_EVT: /* Message about received CCCD write */
+      case DASN_SERVICE_CFG_EVT: /* Message about received CCCD write */
           /* Call different handler per service */
           switch(pCharData->svcUUID)
           {
             case DATA_SERVICE_SERV_UUID:
-                ProjectZero_DataService_CfgChangeHandler(pCharData);
+                DASN_DataService_CfgChangeHandler(pCharData);
                 break;
           }
           break;
@@ -881,10 +882,10 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
             //TODO: Hacer algo con el led para ver si borre esto de mas o no.
           break;
 
-      case PZ_BUTTON_DEBOUNCED_EVT: /* Message from swi about pin change */
+      case DASN_BUTTON_DEBOUNCED_EVT: /* Message from swi about pin change */
       {
           pzButtonState_t *pButtonState = (pzButtonState_t *)pMsg->pData;
-          ProjectZero_handleButtonPress(pButtonState);
+          DASN_handleButtonPress(pButtonState);
       }
       break;
 
@@ -1766,7 +1767,7 @@ static void ProjectZero_updatePHYStat(uint16_t eventCode, uint8_t *pMsg)
  *
  * @return  None.
  */
-static void ProjectZero_handleButtonPress(pzButtonState_t *pState)
+static void DASN_handleButtonPress(pzButtonState_t *pState)
 {
     Log_info2("%s %s",
               (uintptr_t)(pState->pinId ==
@@ -1780,6 +1781,7 @@ static void ProjectZero_handleButtonPress(pzButtonState_t *pState)
     {
     case Board_PIN_BUTTON0:
         //TODO: Poner aqui lo que hace el boton
+        PIN_setOutputValue(ledPinHandle, Board_PIN_LED1, !PIN_getOutputValue(Board_PIN_LED1));
 
         break;
     default:
@@ -1814,18 +1816,18 @@ void DASN_DataService_ValueChangeHandler(pzCharacteristicData_t *pCharData)
 {
     // Value to hold the received Cmd for printing via Log, as Log printouts
     // happen in the Idle task, and so need to refer to a global/static variable.
-    static uint8_t received_Cmd[DS_CMD_LEN] = {0};
+    static uint8_t received_Cmd[DS_CMD_RCV_LEN] = {0};
 
     switch(pCharData->paramID)
     {
-    case DS_CMD_ID:
+    case DS_CMD_RCV_ID:
         // Do something useful with pCharData->data here
 
 
         // Copy received data to holder array, ensuring NULL termination.
-        memset(received_Cmd, 0, DS_CMD_LEN);
+        memset(received_Cmd, 0, DS_CMD_RCV_LEN);
         memcpy(received_Cmd, pCharData->data,
-               MIN(pCharData->dataLen, DS_CMD_LEN - 1));
+               MIN(pCharData->dataLen, DS_CMD_RCV_LEN - 1));
         // Needed to copy before log statement, as the holder array remains after
         // the pCharData message has been freed and reused for something else.
         Log_info3("Value Change msg: %s %s: %s",
@@ -1837,6 +1839,17 @@ void DASN_DataService_ValueChangeHandler(pzCharacteristicData_t *pCharData)
         case 0: //TODO: Poner aquí lo que se hace cuando se recibe un comando
             break;
         }
+        break;
+    case DS_CMD_SND_ID: //No debería entrar nunca acá porque esta caracteristica es solo de lectura
+        memset(received_Cmd, 0, DS_CMD_SND_LEN);
+        memcpy(received_Cmd, pCharData->data,
+               MIN(pCharData->dataLen, DS_CMD_SND_LEN - 1));
+        // Needed to copy before log statement, as the holder array remains after
+        // the pCharData message has been freed and reused for something else.
+        Log_info3("Value Change msg: %s %s: %s",
+                  (uintptr_t)"Data Service",
+                  (uintptr_t)"Cmd",
+                  (uintptr_t)received_Cmd);
         break;
 
     case DS_STREAM_ID:
@@ -1862,7 +1875,7 @@ void DASN_DataService_ValueChangeHandler(pzCharacteristicData_t *pCharData)
  *
  * @return  None.
  */
-void ProjectZero_DataService_CfgChangeHandler(pzCharacteristicData_t *pCharData)
+void DASN_DataService_CfgChangeHandler(pzCharacteristicData_t *pCharData)
 {
     // Cast received data to uint16, as that's the format for CCCD writes.
     uint16_t configValue = *(uint16_t *)pCharData->data;
@@ -1896,7 +1909,8 @@ void ProjectZero_DataService_CfgChangeHandler(pzCharacteristicData_t *pCharData)
         // wants to know the state of this characteristic.
         // ...
         break;
-    case DS_CMD_ID:
+    case DS_CMD_RCV_ID:
+    case DS_CMD_SND_ID:
         Log_info3("CCCD Change msg: %s %s: %s",
                   (uintptr_t)"Data Service",
                   (uintptr_t)"Cmd",
@@ -2075,7 +2089,7 @@ static void ProjectZero_DataService_CfgChangeCB(uint16_t connHandle,
         memcpy(pValChange->data, pValue, len);
         pValChange->dataLen = len;
 
-        if(DASN_enqueueMsg(PZ_SERVICE_CFG_EVT, pValChange) != SUCCESS)
+        if(DASN_enqueueMsg(DASN_SERVICE_CFG_EVT, pValChange) != SUCCESS)
         {
           ICall_free(pValChange);
         }
@@ -2173,7 +2187,7 @@ static void buttonDebounceSwiFxn(UArg buttonId)
         if(pButtonState != NULL)
         {
             *pButtonState = buttonMsg;
-            if(DASN_enqueueMsg(PZ_BUTTON_DEBOUNCED_EVT, pButtonState) != SUCCESS)
+            if(DASN_enqueueMsg(DASN_BUTTON_DEBOUNCED_EVT, pButtonState) != SUCCESS)
             {
               ICall_free(pButtonState);
             }
