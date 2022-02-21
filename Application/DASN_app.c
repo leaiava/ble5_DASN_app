@@ -357,7 +357,7 @@ static Clock_Handle button0DebounceClockHandle;
 // State of the buttons
 static uint8_t button0State = 0;
 
-
+static uint8_t contador=0; //para debug
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -1794,9 +1794,9 @@ static void DASN_handleButtonPress(pzButtonState_t *pState)
 static void DASN_handleNewData(void* pdata)
 {
     Log_info0("New data from ADS1299");
-
+    contador++;
     DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, rxbuf);
-
+    DataService_SetParameter(DS_CMD_SND_ID, DS_CMD_SND_LEN, &contador);
 }
 
 /*

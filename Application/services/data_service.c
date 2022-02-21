@@ -123,13 +123,16 @@ static uint8_t ds_CmdRcvVal[DS_CMD_RCV_LEN] = {0};
 static uint16_t ds_CmdRcvValLen = DS_CMD_RCV_LEN_MIN;
 
 // Characteristic "CMD SND" Properties (for declaration)
-static uint8_t ds_CmdSndProps = GATT_PROP_READ;
+static uint8_t ds_CmdSndProps = GATT_PROP_READ | GATT_PROP_NOTIFY ;
 
 // Characteristic "Cmd Snd" Value variable
 static uint8_t ds_CmdSndVal[DS_CMD_SND_LEN] = {0};
 
 // Length of data in characteristic "Cmd Snd" Value variable, initialized to minimal size.
 static uint16_t ds_CmdSndValLen = DS_CMD_SND_LEN_MIN;
+
+// Characteristic "CmdSnd" Client Characteristic Configuration Descriptor
+static gattCharCfg_t *ds_CmdSndConfig;
 
 // Characteristic "Stream" Properties (for declaration)
 static uint8_t ds_StreamProps = GATT_PROP_READ | GATT_PROP_NOTIFY | GATT_PROP_WRITE_NO_RSP;
@@ -183,6 +186,13 @@ static gattAttribute_t Data_ServiceAttrTbl[] =
         GATT_PERMIT_READ,
         0,
         ds_CmdSndVal
+    },
+    // CmdSnd CCCD
+    {
+        { ATT_BT_UUID_SIZE, clientCharCfgUUID },
+        GATT_PERMIT_READ | GATT_PERMIT_WRITE,
+        0,
+        (uint8_t *)&ds_CmdSndConfig
     },
     // Stream Characteristic Declaration
     {
@@ -248,25 +258,30 @@ CONST gattServiceCBs_t Data_ServiceCBs =
 extern bStatus_t DataService_AddService(uint8_t rspTaskId)
 {
     uint8_t status;
-
-    // Allocate Client Characteristic Configuration table
-    ds_StreamConfig = (gattCharCfg_t *)ICall_malloc(
-        sizeof(gattCharCfg_t) * linkDBNumConns);
+    // Allocate Stream Client Characteristic Configuration table
+    ds_StreamConfig = (gattCharCfg_t *)ICall_malloc(sizeof(gattCharCfg_t) * linkDBNumConns);
     if(ds_StreamConfig == NULL)
     {
         return(bleMemAllocError);
     }
-
-    // Initialize Client Characteristic Configuration attributes
+    // Initialize Stream Client Characteristic Configuration attributes
     GATTServApp_InitCharCfg(CONNHANDLE_INVALID, ds_StreamConfig);
+
+    // Allocate CMS_SND Client Characteristic Configuration table
+    ds_CmdSndConfig = (gattCharCfg_t *)ICall_malloc(sizeof(gattCharCfg_t) * linkDBNumConns);
+    if(ds_CmdSndConfig == NULL)
+    {
+        return(bleMemAllocError);
+    }
+    // Initialize CMD_SND Client Characteristic Configuration attributes
+    GATTServApp_InitCharCfg(CONNHANDLE_INVALID, ds_CmdSndConfig);
 
     // Register GATT attribute list and CBs with GATT Server App
     status = GATTServApp_RegisterService(Data_ServiceAttrTbl,
                                          GATT_NUM_ATTRS(Data_ServiceAttrTbl),
                                          GATT_MAX_ENCRYPT_KEY_SIZE,
                                          &Data_ServiceCBs);
-    Log_info1("Registered service, %d attributes",
-              GATT_NUM_ATTRS(Data_ServiceAttrTbl));
+    Log_info1("Registered service, %d attributes",GATT_NUM_ATTRS(Data_ServiceAttrTbl));
     ds_icall_rsp_task_id = rspTaskId;
 
     return(status);
@@ -322,7 +337,7 @@ bStatus_t DataService_SetParameter(uint8_t param, uint16_t len, void *value)
         pValLen = &ds_CmdRcvValLen;
         valMinLen = DS_CMD_RCV_LEN_MIN;
         valMaxLen = DS_CMD_RCV_LEN;
-        Log_info2("SetParameter : %s len: %d", (uintptr_t)"Cmd", len);
+        Log_info2("SetParameter : %s len: %d", (uintptr_t)"Cmd Rcv", len);
         break;
 
     case DS_CMD_SND_ID:
@@ -330,7 +345,10 @@ bStatus_t DataService_SetParameter(uint8_t param, uint16_t len, void *value)
         pValLen = &ds_CmdSndValLen;
         valMinLen = DS_CMD_SND_LEN_MIN;
         valMaxLen = DS_CMD_SND_LEN;
-        Log_info2("SetParameter : %s len: %d", (uintptr_t)"Cmd", len);
+        sendNotiInd = TRUE;
+        attrConfig = ds_CmdSndConfig;
+        needAuth = FALSE;  // Change if authenticated link is required for sending.
+        Log_info2("SetParameter : %s len: %d", (uintptr_t)"Cmd Snd", len);
         break;
 
     case DS_STREAM_ID:
