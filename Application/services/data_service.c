@@ -643,6 +643,7 @@ static bStatus_t Data_Service_WriteAttrCB(uint16_t connHandle,
             len,
             offset,
             method);
+        Log_info1("The value received was %d", *pValue);
         /* Other considerations for Cmd rcv can be inserted here */
         break;
 

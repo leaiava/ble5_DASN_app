@@ -163,7 +163,7 @@ typedef struct
 {
     uint8_t event;
     void    *pData;
-} pzMsg_t;
+} DASN_Msg_t;
 
 // Struct for messages about characteristic data
 typedef struct
@@ -255,8 +255,8 @@ Task_Struct pzTask;
 #else
 #pragma data_alignment=8
 #endif
-uint8_t appTaskStack[DASN_TASK_STACK_SIZE];
 
+uint8_t appTaskStack[DASN_TASK_STACK_SIZE];
 /*********************************************************************
  * LOCAL VARIABLES
  */
@@ -358,6 +358,8 @@ static Clock_Handle button0DebounceClockHandle;
 static uint8_t button0State = 0;
 
 static uint8_t contador=0; //para debug
+//static uint8_t ds_stream_buf[DS_STREAM_LEN];
+
 /*********************************************************************
  * LOCAL FUNCTIONS
  */
@@ -368,7 +370,7 @@ static void DASN_taskFxn(UArg a0, UArg a1);
 
 /* Event message processing functions */
 static void ProjectZero_processStackEvent(uint32_t stack_event);
-static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg);
+static void ProjectZero_processApplicationMessage(DASN_Msg_t *pMsg);
 static uint8_t ProjectZero_processGATTMsg(gattMsgEvent_t *pMsg);
 static void ProjectZero_processGapMessage(gapEventHdr_t *pMsg);
 static void ProjectZero_processHCIMsg(ICall_HciExtEvt *pMsg);
@@ -448,7 +450,7 @@ extern void AssertHandler(uint8_t assertCause,
  * EXTERN VARIABLES
  */
 extern uint8_t rxbuf[32];
-
+extern Event_Handle ads1299_event;
 /*********************************************************************
 * PROFILE CALLBACKS
  */
@@ -673,7 +675,7 @@ static void DASN_taskFxn(UArg a0, UArg a1)
     // Initialize application
     DASN_init();
 
-    ADS1299_init();
+    //ADS1299_init();
 
     // Application main loop
     for(;; )
@@ -750,7 +752,7 @@ static void DASN_taskFxn(UArg a0, UArg a1)
             // Process messages sent from another task or another context.
             while(!Queue_empty(appMsgQueueHandle))
             {
-                pzMsg_t *pMsg = (pzMsg_t *)Util_dequeueMsg(appMsgQueueHandle);
+                DASN_Msg_t *pMsg = (DASN_Msg_t *)Util_dequeueMsg(appMsgQueueHandle);
                 if(pMsg)
                 {
                     // Process application-layer message probably sent from ourselves.
@@ -844,13 +846,10 @@ static uint8_t ProjectZero_processGATTMsg(gattMsgEvent_t *pMsg)
  *          call any BLE APIs, so instead the Swi function must send a message
  *          to the application Task for processing in Task context.
  *
- * @param   pMsg  Pointer to the message of type pzMsg_t.
+ * @param   pMsg  Pointer to the message of type DASN_Msg_t.
  */
-static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
+static void ProjectZero_processApplicationMessage(DASN_Msg_t *pMsg)
 {
-    // Cast to pzCharacteristicData_t* here since it's a common message pdu type.
-    pzCharacteristicData_t *pCharData = (pzCharacteristicData_t *)pMsg->pData;
-
     switch(pMsg->event)
     {
       case HCI_BLE_HARDWARE_ERROR_EVENT_CODE:
@@ -858,7 +857,9 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
           break;
 
       case DASN_SERVICE_WRITE_EVT: /* Message about received value write */
+      {
           /* Call different handler per service */
+          pzCharacteristicData_t *pCharData = (pzCharacteristicData_t *)pMsg->pData;
           switch(pCharData->svcUUID)
           {
             case DATA_SERVICE_SERV_UUID:
@@ -866,9 +867,11 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
                 break;
           }
           break;
-
+      }
       case DASN_SERVICE_CFG_EVT: /* Message about received CCCD write */
+      {
           /* Call different handler per service */
+          pzCharacteristicData_t *pCharData = (pzCharacteristicData_t *)pMsg->pData;
           switch(pCharData->svcUUID)
           {
             case DATA_SERVICE_SERV_UUID:
@@ -876,7 +879,7 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
                 break;
           }
           break;
-
+      }
       case PZ_UPDATE_CHARVAL_EVT: /* Message from ourselves to send  */
           //  ProjectZero_updateCharVal(pCharData);
             //TODO: Hacer algo con el led para ver si borre esto de mas o no.
@@ -926,7 +929,7 @@ static void ProjectZero_processApplicationMessage(pzMsg_t *pMsg)
 
       case DASN_NEW_DATA_EVT: /* Message from swi about newe data */
       {
-          //uint8_t *pdata = (uint8_t *)pMsg->pData;              //TODO: Ver que variable viene en pMsg
+          //TODO: Ver que variable viene en pMsg
           DASN_handleNewData(pMsg->pData);
       }
       break;
@@ -1781,6 +1784,7 @@ static void DASN_handleButtonPress(pzButtonState_t *pState)
     {
     case Board_PIN_BUTTON0:
         //TODO: Poner aqui lo que hace el boton
+        Event_post(ads1299_event, ADS1299_test_event);
         PIN_setOutputValue(ledPinHandle, Board_PIN_LED1, !PIN_getOutputValue(Board_PIN_LED1));
 
         break;
@@ -1795,7 +1799,7 @@ static void DASN_handleNewData(void* pdata)
 {
     Log_info0("New data from ADS1299");
     contador++;
-    DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, rxbuf);
+    DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, pdata);
     DataService_SetParameter(DS_CMD_SND_ID, DS_CMD_SND_LEN, &contador);
 }
 
@@ -1826,24 +1830,22 @@ void DASN_DataService_ValueChangeHandler(pzCharacteristicData_t *pCharData)
 
         // Copy received data to holder array, ensuring NULL termination.
         memset(received_Cmd, 0, DS_CMD_RCV_LEN);
-        memcpy(received_Cmd, pCharData->data,
-               MIN(pCharData->dataLen, DS_CMD_RCV_LEN - 1));
+        memcpy(received_Cmd, pCharData->data,1);
+               //MIN(pCharData->dataLen, DS_CMD_RCV_LEN - 1)); // Lo anulo porque ahora siempre es 1 el dato recibido
         // Needed to copy before log statement, as the holder array remains after
         // the pCharData message has been freed and reused for something else.
         Log_info3("Value Change msg: %s %s: %s",
                   (uintptr_t)"Data Service",
                   (uintptr_t)"Cmd",
                   (uintptr_t)received_Cmd);
-        switch(received_Cmd[0])
-        {
-        case 0: //TODO: Poner aquí lo que se hace cuando se recibe un comando
-            break;
-        }
+        //TODO: Poner aquí lo que se hace cuando se recibe un comando
+
+        Event_post(ads1299_event, received_Cmd[0]); //Envio el byte 0;
         break;
     case DS_CMD_SND_ID: //No debería entrar nunca acá porque esta caracteristica es solo de lectura
         memset(received_Cmd, 0, DS_CMD_SND_LEN);
-        memcpy(received_Cmd, pCharData->data,
-               MIN(pCharData->dataLen, DS_CMD_SND_LEN - 1));
+        memcpy(received_Cmd, pCharData->data,1);
+               //MIN(pCharData->dataLen, DS_CMD_SND_LEN - 1)); // IDEM case anterior
         // Needed to copy before log statement, as the holder array remains after
         // the pCharData message has been freed and reused for something else.
         Log_info3("Value Change msg: %s %s: %s",
@@ -2243,7 +2245,7 @@ static void buttonCallbackFxn(PIN_Handle handle, PIN_Id pinId)
 bStatus_t DASN_enqueueMsg(uint8_t event, void *pData)
 {
     uint8_t success;
-    pzMsg_t *pMsg = ICall_malloc(sizeof(pzMsg_t));
+    DASN_Msg_t *pMsg = ICall_malloc(sizeof(DASN_Msg_t));
 
     if(pMsg)
     {

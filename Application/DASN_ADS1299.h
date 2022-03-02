@@ -7,6 +7,84 @@
 #include <ti/drivers/spi/SPICC26XXDMA.h>
 #include <ti/drivers/dma/UDMACC26XX.h>
 
+// Event Handle global para recibir los eventos.
+
+// List of events to manage
+#define ADS1299_ALL_EVENTS          0x1F
+#define ADS1299_test_event          1
+
+typedef enum {
+    ESTADO_STANDBY,             //!< Estado inicial luego del reset
+    ESTADO_CONECTADO,           //!< Cuando establece conexión con un dispositivo externo
+    ESTADO_CONFIGURANDO,        //!< Estado para configurar cantidad de canales y frecuencia de sampling
+    ESTADO_LISTO_PARA_ADQUIRIR, //!< Si tiene configurado una frecuencia de muestreo y canales a usar queda en este estado
+    ESTADO_ADQUIRIENDO          //!< Adquiriendo y enviando datos por la UART.
+}mis_estados_t;
+
+/*
+typedef enum {
+    ADS1299_CMD_HOLA = 1,
+
+    DASN_START_ACQ,
+    DASN_STOP_ACQ,
+    DASN_POWER_OFF,
+    DASN_FREC1,             //   65 Hz
+    DASN_FREC2,             //  131 Hz
+    DASN_FREC3,             //  262 Hz
+    DASN_FREC4,             //  524 Hz
+    DASN_FREC5,             // 1048 Hz
+    DASN_FREC6,             // 2096 Hz
+    DASN_FREC7,             // 4193 Hz
+    DASN_TRIGGER_OUT1,      //  0,1 ms
+    DASN_TRIGGER_OUT2,      //  0,5 ms
+    DASN_TRIGGER_OUT3,      //    1 ms
+    DASN_TRIGGER_OUT4,      //    5 ms
+    DASN_TRIGGER_OUT5,      //   10 ms
+    DASN_TRIGGER_IN,        // Trigger IN Enable
+    DASN_TRIGGER_DISABLE,   // Trigger module disable
+    DASN_Z_SIGNAL1_EN,      //  7,8 Hz
+    DASN_Z_SIGNAL2_EN,      // 31,2 Hz
+    DASN_Z_SIGNAL_OFF,      // No Impedance signal injected
+
+}DASN_Commands_t;
+*/
+
+typedef enum {
+
+    ADS1299_CMD_HOLA = 1,           //!<  1-Iniciar la comunicación.
+    ADS1299_CMD_OK,                 //!<  2-Se interpreto bien el comando recibido
+    ADS1299_CMD_NO_OK,              //!<  3-No se interpreto el comando recibido
+    ADS1299_CMD_CHAU,               //!<  4-Terminar comunicacion
+    ADS1299_CMD_CONFIG_INICIAR,     //!<  5-Inicia configuracion
+    ADS1299_CMD_CONFIG_TERMINAR,    //!<  6-Termina configuracion
+    ADS1299_CMD_CONFIG_CH_ALL_ON,   //!<  7-Todos los canales habilitados
+    ADS1299_CMD_CONFIG_CH_ALL_OFF,  //!<  8-Todos los canales deshabilitados
+    ADS1299_CMD_CONFIG_CH1_ON,      //!<  9-Canal 1 habilitdo
+    ADS1299_CMD_CONFIG_CH2_ON,      //!< 10-Canal 2 habilitdo
+    ADS1299_CMD_CONFIG_CH3_ON,      //!< 11-Canal 3 habilitdo
+    ADS1299_CMD_CONFIG_CH4_ON,      //!< 12-Canal 4 habilitdo
+    ADS1299_CMD_CONFIG_CH5_ON,      //!< 13-Canal 5 habilitdo
+    ADS1299_CMD_CONFIG_CH6_ON,      //!< 14-Canal 6 habilitdo
+    ADS1299_CMD_CONFIG_CH7_ON,      //!< 15-Canal 7 habilitdo
+    ADS1299_CMD_CONFIG_CH8_ON,      //!< 16-Canal 8 habilitdo
+    ADS1299_CMD_CONFIG_FREC_1,      //!< 17-Configura ADC con frecuencia 1 (16KHz)
+    ADS1299_CMD_CONFIG_FREC_2,      //!< 18-Configura ADC con frecuencia 2 ( 8KHz)
+    ADS1299_CMD_CONFIG_FREC_3,      //!< 19-Configura ADC con frecuencia 3 ( 4KHz)
+    ADS1299_CMD_CONFIG_FREC_4,      //!< 20-Configura ADC con frecuencia 4 ( 2KHz)
+    ADS1299_CMD_CONFIG_FREC_5,      //!< 21-Configura ADC con frecuencia 5 ( 1KHz)
+    ADS1299_CMD_CONFIG_FREC_6,      //!< 22-Configura ADC con frecuencia 6 (500Hz)
+    ADS1299_CMD_CONFIG_FREC_7,      //!< 23-Configura ADC con frecuencia 7 (250Hz)
+    ADS1299_CMD_ADQUIRIR,           //!< 24-Inicia la adquisición
+    ADS1299_CMD_PARAR,              //!< 25-Para la adquisición
+    ADS1299_CMD_OCUPADO,            //!< 26-Respuesta si no puede atender un comando
+    ADS1299_CMD_LEER_ESTADO,        //!< 27-Pregunta en que estado se encuentra
+    ADS1299_CMD_WAKE_UP,
+    ADS1299_CMD_29,
+    ADS1299_CMD_30,
+    ADS1299_CMD_31,
+    ADS1299_CMD_32,
+}ADS1299cmd_t;
+
 typedef enum {
     EXTERNAL_CLOCK=0,
     INTERNAL_CLOCK=1
@@ -97,14 +175,13 @@ typedef struct {
     uint8_t config4;
 }ads1299_registers_t;
 
-void ADS1299_init();
-void ADS1299_power_on();
-void ADS1299_power_off();
-void ads1299_readAllRegisters(SPI_Transaction* ptrTransaction);
-void ads1299_readAllChannels(SPI_Transaction* ptrTransaction);
-void ads1299_writeRegister(SPI_Transaction* ptrTransaction, registers_t registro, uint8_t data);
-void ads1299_startConversion(SPI_Transaction* ptrTransaction);
-void ADS1299_STOP(SPI_Transaction* ptrTransaction);
+void DASN_ADS1299_createTask(void);
+
+void ads1299_readAllRegisters(void);
+void ads1299_readAllChannels(void);
+void ads1299_writeRegister(registers_t registro, uint8_t data);
+void ads1299_startConversion(void);
+void ADS1299_STOP(void);
 
 #define DASN_NEW_DATA_EVT       10
 #define DASN_TRANSFER_COMPLETE  11
