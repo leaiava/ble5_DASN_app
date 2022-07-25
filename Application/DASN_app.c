@@ -82,7 +82,7 @@
 
 #include <DASN_app.h>
 #include <DASN_ADS1299.h>
-#include <UI.h>
+//#include <DASN_UI.h>
 #include <util.h>
 
 /*********************************************************************
@@ -449,7 +449,6 @@ extern void AssertHandler(uint8_t assertCause,
 /*********************************************************************
  * EXTERN VARIABLES
  */
-extern uint8_t rxbuf[32];
 extern Event_Handle ads1299_event;
 /*********************************************************************
 * PROFILE CALLBACKS
@@ -620,7 +619,7 @@ static void DASN_init(void)
     DataService_RegisterAppCBs(&ProjectZero_Data_ServiceCBs);
 
     // Placeholder variable for characteristic intialization
-    uint8_t initVal[40] = {0};
+    uint8_t initVal[DS_STREAM_LEN] = {0};
     uint8_t initCmdRcv = 0;
     uint8_t initCmdSnd = 0;
     // Initalization of characteristics in Data_Service that can provide data.
@@ -1677,6 +1676,8 @@ static void ProjectZero_sendParamUpdate(uint16_t connHandle)
             }
         }
     }
+    //HCI_LE_SetDataLenCmd(connHandle, APP_SUGGESTED_PDU_SIZE, APP_SUGGESTED_TX_TIME);
+    //Log_info0("------ ProjectZero_sendParamUpdate ------");
 }
 
 /*********************************************************************
@@ -1797,8 +1798,8 @@ static void DASN_handleButtonPress(pzButtonState_t *pState)
  */
 static void DASN_handleNewData(void* pdata)
 {
-    Log_info0("New data from ADS1299");
     contador++;
+    //if ( contador % 2 == 0 )
     DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, pdata);
     DataService_SetParameter(DS_CMD_SND_ID, DS_CMD_SND_LEN, &contador);
 }

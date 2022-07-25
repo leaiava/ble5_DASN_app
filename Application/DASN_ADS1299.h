@@ -60,29 +60,29 @@ typedef enum {
     ADS1299_CMD_CONFIG_CH_ALL_ON,   //!<  7-Todos los canales habilitados
     ADS1299_CMD_CONFIG_CH_ALL_OFF,  //!<  8-Todos los canales deshabilitados
     ADS1299_CMD_CONFIG_CH1_ON,      //!<  9-Canal 1 habilitdo
-    ADS1299_CMD_CONFIG_CH2_ON,      //!< 10-Canal 2 habilitdo
-    ADS1299_CMD_CONFIG_CH3_ON,      //!< 11-Canal 3 habilitdo
-    ADS1299_CMD_CONFIG_CH4_ON,      //!< 12-Canal 4 habilitdo
-    ADS1299_CMD_CONFIG_CH5_ON,      //!< 13-Canal 5 habilitdo
-    ADS1299_CMD_CONFIG_CH6_ON,      //!< 14-Canal 6 habilitdo
-    ADS1299_CMD_CONFIG_CH7_ON,      //!< 15-Canal 7 habilitdo
-    ADS1299_CMD_CONFIG_CH8_ON,      //!< 16-Canal 8 habilitdo
-    ADS1299_CMD_CONFIG_FREC_1,      //!< 17-Configura ADC con frecuencia 1 (16KHz)
-    ADS1299_CMD_CONFIG_FREC_2,      //!< 18-Configura ADC con frecuencia 2 ( 8KHz)
-    ADS1299_CMD_CONFIG_FREC_3,      //!< 19-Configura ADC con frecuencia 3 ( 4KHz)
-    ADS1299_CMD_CONFIG_FREC_4,      //!< 20-Configura ADC con frecuencia 4 ( 2KHz)
-    ADS1299_CMD_CONFIG_FREC_5,      //!< 21-Configura ADC con frecuencia 5 ( 1KHz)
-    ADS1299_CMD_CONFIG_FREC_6,      //!< 22-Configura ADC con frecuencia 6 (500Hz)
-    ADS1299_CMD_CONFIG_FREC_7,      //!< 23-Configura ADC con frecuencia 7 (250Hz)
-    ADS1299_CMD_ADQUIRIR,           //!< 24-Inicia la adquisición
-    ADS1299_CMD_PARAR,              //!< 25-Para la adquisición
-    ADS1299_CMD_OCUPADO,            //!< 26-Respuesta si no puede atender un comando
-    ADS1299_CMD_LEER_ESTADO,        //!< 27-Pregunta en que estado se encuentra
-    ADS1299_CMD_WAKE_UP,
-    ADS1299_CMD_29,
-    ADS1299_CMD_30,
-    ADS1299_CMD_31,
-    ADS1299_CMD_32,
+    ADS1299_CMD_CONFIG_CH2_ON,      //!<  A-Canal 2 habilitdo
+    ADS1299_CMD_CONFIG_CH3_ON,      //!<  B-Canal 3 habilitdo
+    ADS1299_CMD_CONFIG_CH4_ON,      //!<  C-Canal 4 habilitdo
+    ADS1299_CMD_CONFIG_CH5_ON,      //!<  D-Canal 5 habilitdo
+    ADS1299_CMD_CONFIG_CH6_ON,      //!<  E-Canal 6 habilitdo
+    ADS1299_CMD_CONFIG_CH7_ON,      //!<  F-Canal 7 habilitdo
+    ADS1299_CMD_CONFIG_CH8_ON,      //!< 10-Canal 8 habilitdo
+    ADS1299_CMD_CONFIG_FREC_1,      //!< 11-Configura ADC con frecuencia 1 (16KHz)
+    ADS1299_CMD_CONFIG_FREC_2,      //!< 12-Configura ADC con frecuencia 2 ( 8KHz)
+    ADS1299_CMD_CONFIG_FREC_3,      //!< 13-Configura ADC con frecuencia 3 ( 4KHz)
+    ADS1299_CMD_CONFIG_FREC_4,      //!< 14-Configura ADC con frecuencia 4 ( 2KHz)
+    ADS1299_CMD_CONFIG_FREC_5,      //!< 15-Configura ADC con frecuencia 5 ( 1KHz)
+    ADS1299_CMD_CONFIG_FREC_6,      //!< 16-Configura ADC con frecuencia 6 (500Hz)
+    ADS1299_CMD_CONFIG_FREC_7,      //!< 17-Configura ADC con frecuencia 7 (250Hz)
+    ADS1299_CMD_ADQUIRIR,           //!< 18-Inicia la adquisición
+    ADS1299_CMD_PARAR,              //!< 19-Para la adquisición
+    ADS1299_CMD_OCUPADO,            //!< 1A-Respuesta si no puede atender un comando
+    ADS1299_CMD_LEER_ESTADO,        //!< 1B-Pregunta en que estado se encuentra
+    ADS1299_CMD_WAKE_UP,            //!< 1C-Sirve para actualizar la MEF interna del modulo
+    ADS1299_CMD_ZSIGNAL_ON,         //!< 1D-Inyecta la señal de impedancia
+    ADS1299_CMD_ZSIGNAL_OFF,        //!< 1E-Apaga la señal de impedancia
+    ADS1299_CMD_RESET,              //!< 1F
+
 }ADS1299cmd_t;
 
 typedef enum {
@@ -141,6 +141,7 @@ typedef enum {
 typedef enum {
     READ_REG_ALL,
     WRITE_REG,
+    READ_REG,
     SEND_CMD,
     READ_ALL_CH
 }transaction_t;
@@ -180,6 +181,8 @@ void DASN_ADS1299_createTask(void);
 void ads1299_readAllRegisters(void);
 void ads1299_readAllChannels(void);
 void ads1299_writeRegister(registers_t registro, uint8_t data);
+uint8_t ads1299_readRegister(registers_t registro);
+void ads1299_sendCommand(commands_t cmd);
 void ads1299_startConversion(void);
 void ADS1299_STOP(void);
 
@@ -265,6 +268,7 @@ void ADS1299_STOP(void);
 #define ADS1299_CH_N_TEST_SIGNAL                (0x05)    // Test signal
 #define ADS1299_CH_N_BIAS_DRP                   (0x06)    // BIAS_DRP
 #define ADS1299_CH_N_BIAS_DRN                   (0x07)    // BIAS_DRN
+#define CH_GAIN_MASK                            (0X70)
 
 /* ------ BIAS_SENSP settings ------ */
 #define ADS1299_BIASP8_EN                       (0x80)    // Route channel 8 positive signal into BIAS derivation
@@ -298,6 +302,7 @@ void ADS1299_STOP(void);
 #define ADS1299_LOFFP2_EN                       (0x02)    // Enable lead-off detection on IN2P
 #define ADS1299_LOFFP1_EN                       (0x01)    // Enable lead-off detection on IN1P
 #define ADS1299_LOFFP_EN_ALL                    (0xFF)    // Enable lead-off detection on all INxP
+#define ADS1299_LOFFP_DIS_ALL                   (0x00)    // Disable lead-off detection on all INxP
 
 /* ------ LOFF_SENSN settings ------ */
 #define ADS1299_LOFFM8_EN                       (0x80)    // Enable lead-off detection on IN8N
@@ -309,6 +314,7 @@ void ADS1299_STOP(void);
 #define ADS1299_LOFFM2_EN                       (0x02)    // Enable lead-off detection on IN2N
 #define ADS1299_LOFFM1_EN                       (0x01)    // Enable lead-off detection on IN1N
 #define ADS1299_LOFFM_EN_ALL                    (0xFF)    // Enable lead-off detection on all INxN
+#define ADS1299_LOFFM_DIS_ALL                   (0x00)    // Disable lead-off detection on all INxN
 
 /* ------ LOFF_FLIP settings ------ */
 #define ADS1299_LOFF_FLIP_DIS_ALL               (0x00)    // All INxP are pulled to AVDD and INxN pulled to AVSS

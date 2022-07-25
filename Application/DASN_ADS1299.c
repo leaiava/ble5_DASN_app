@@ -2,6 +2,7 @@
  * INCLUDES
  */
 #include <DASN_ADS1299.h>
+//#include <DASN_UI.h>
 
 #include <Board.h>
 #include <icall.h>
@@ -80,7 +81,7 @@ uint8_t regID = 1;
 ads1299_registers_t ads1299_registers;
 uint8_t txbuf[DS_STREAM_LEN];
 uint8_t rxbuf[DS_STREAM_LEN];
-uint8_t data[32];
+uint8_t data[DS_STREAM_LEN];
 uint8_t counter=0;
 
 /*********************************************************************
@@ -99,7 +100,7 @@ static void ADS1299_power_off(void);
  * EXTERN FUNCTIONS
  */
 bStatus_t DASN_enqueueMsg(uint8_t event, void *pData);
-
+extern Event_Handle UI_event;
 /*********************************************************************
  * PROFILE CALLBACKS
  */
@@ -171,7 +172,15 @@ static void DASN_ADS1299_taskFxn(UArg a0, UArg a1)
         events = Event_pend(ads1299_event, Event_Id_NONE, ADS1299_ALL_EVENTS, BIOS_WAIT_FOREVER);
 
         Log_info1("Events =  %d",events);
-
+        // No importa el estado, si llega este comando reseteo, vuelve a STANDBY
+        if (events == ADS1299_CMD_RESET)
+        {
+            ch_config_flag = false;
+            frec_config_flag = false;
+            ads1299_estado = ESTADO_STANDBY;
+            ads1299_sendCommand(RESET_CMD);
+            //ADS1299_power_off();
+        }
         switch (ads1299_estado)
         {
         case ESTADO_STANDBY:
@@ -179,11 +188,36 @@ static void DASN_ADS1299_taskFxn(UArg a0, UArg a1)
             if (events == ADS1299_CMD_HOLA)
             {
                 // TODO:Contesto OK
+                registers_t reg;
                 ADS1299_power_on();
+                Task_sleep(2000);
+
+                ads1299_writeRegister(CONFIG3 ,
+                                      ADS1299_CONFIG3_INTERNAL_REF_BUF_EN |
+                                      ADS1299_CONFIG3_BIASREF_SIGNAL_INTERNALLY |
+                                      ADS1299_CONFIG3_BIAS_BUFFER_ENABLE
+                                      );
+                Task_sleep(1000);
+                reg = CH1SET;
+                for(uint8_t i=0; i<8 ; i++)
+                {
+
+                    ads1299_writeRegister(reg,
+                                          ADS1299_CH_N_SET_SETUP_NO |
+                                          ADS1299_CH_N_PGA_GAIN_1 |
+                                          ADS1299_CH_N_SRB2_OPEN |
+                                          ADS1299_CH_N_NORMAL_ELECTRODE_INPUT
+                                          );
+                    reg++;
+                }
+                ads1299_writeRegister(LOFF,
+                                      ADS1299_LOFF_TH_85 |
+                                      ADS1299_LOFF_CURRENT_24U |
+                                      ADS1299_LOFF_FREQ_31
+                                      );
                 ads1299_readAllRegisters();
                 Task_sleep(1000);
-                ads1299_writeRegister(CONFIG3 , ADS1299_CONFIG3_INTERNAL_REF_BUF_EN);
-                Task_sleep(1000);
+
                 ads1299_estado = ESTADO_CONECTADO;
                 Log_info0("ESTADO_CONECTADO");
             }
@@ -221,6 +255,7 @@ static void DASN_ADS1299_taskFxn(UArg a0, UArg a1)
 
             break;
         case ESTADO_CONFIGURANDO:
+
             Log_info0("ESTADO_CONFIGURANDO");
             if (events == ADS1299_CMD_CONFIG_TERMINAR)
             {
@@ -228,26 +263,81 @@ static void DASN_ADS1299_taskFxn(UArg a0, UArg a1)
                 Event_post(ads1299_event, ADS1299_CMD_WAKE_UP); //envío para actualizar la MEF
             }
 
+            //verifico si es un comando de configuracion todos canales_ON
+            else if (events == ADS1299_CMD_CONFIG_CH_ALL_ON ||
+                    events == ADS1299_CMD_CONFIG_CH_ALL_OFF)
+            {
+                uint8_t parameter;
+                if (events == ADS1299_CMD_CONFIG_CH_ALL_ON)
+                    parameter = ADS1299_CH_N_SET_SETUP_NO |
+                                ADS1299_CH_N_PGA_GAIN_1;
+                else
+                    parameter = ADS1299_CH_N_POWER_DONE;
+                ads1299_registers.ch1set = parameter;
+                ads1299_writeRegister(CH1SET, ads1299_registers.ch1set);
+                ads1299_registers.ch2set = parameter;
+                ads1299_writeRegister(CH2SET, ads1299_registers.ch2set);
+                ads1299_registers.ch3set = parameter;
+                ads1299_writeRegister(CH3SET, ads1299_registers.ch3set);
+                ads1299_registers.ch4set = parameter;
+                ads1299_writeRegister(CH4SET, ads1299_registers.ch4set);
+                ads1299_registers.ch5set = parameter;
+                ads1299_writeRegister(CH5SET, ads1299_registers.ch5set);
+                ads1299_registers.ch6set = parameter;
+                ads1299_writeRegister(CH6SET, ads1299_registers.ch6set);
+                ads1299_registers.ch7set = parameter;
+                ads1299_writeRegister(CH7SET, ads1299_registers.ch7set);
+                ads1299_registers.ch8set = parameter;
+                ads1299_writeRegister(CH8SET, ads1299_registers.ch8set);
+                ch_config_flag = true;
+            }
             //verifico si es un comando de configuracion de canales
-            else if (events >= ADS1299_CMD_CONFIG_CH_ALL_ON &&
+            else if (events >= ADS1299_CMD_CONFIG_CH1_ON &&
                     events <= ADS1299_CMD_CONFIG_CH8_ON )
             {
+                registers_t reg;
+                switch (events)
+                {
+                    case ADS1299_CMD_CONFIG_CH1_ON: reg = CH1SET;break;
+                    case ADS1299_CMD_CONFIG_CH2_ON: reg = CH2SET;break;
+                    case ADS1299_CMD_CONFIG_CH3_ON: reg = CH3SET;break;
+                    case ADS1299_CMD_CONFIG_CH4_ON: reg = CH4SET;break;
+                    case ADS1299_CMD_CONFIG_CH5_ON: reg = CH5SET;break;
+                    case ADS1299_CMD_CONFIG_CH6_ON: reg = CH6SET;break;
+                    case ADS1299_CMD_CONFIG_CH7_ON: reg = CH7SET;break;
+                    case ADS1299_CMD_CONFIG_CH8_ON: reg = CH8SET;break;
+                }
                 //configuro chanels
+                //todo: Mejorar esto, debería actualizar la copia del registro interno
 
+                ads1299_writeRegister(reg, ADS1299_CH_N_SET_SETUP_NO | ADS1299_CH_N_PGA_GAIN_1);
                 ch_config_flag = true;
-
                 // todo: Contesto OK
+
             }
             else if (events >= ADS1299_CMD_CONFIG_FREC_1 &&
                     events <= ADS1299_CMD_CONFIG_FREC_7)
             {
                 // pongo en cero los bits del DATA_RATE
+                Log_info1("CONFIG1:           %d",ads1299_registers.config1);
                 ads1299_registers.config1 &= ~DATA_RATE_MASK;
+                Log_info1("CONFIG1 with MASK: %d",ads1299_registers.config1);
                 // aplico la configuracion del DATA_RATE sin modificar el resto del registro
                 ads1299_registers.config1 |= ADS1299_CONFIG1_DATA_RATE_16000 + events - ADS1299_CMD_CONFIG_FREC_1;
                 ads1299_writeRegister(CONFIG1 , ads1299_registers.config1);
+                Log_info1("CONFIG1 MODIFIED:  %d",ads1299_registers.config1);
                 Task_sleep(1000);
                 frec_config_flag = true;
+            }
+            else if (events == ADS1299_CMD_ZSIGNAL_ON)
+            {
+                ads1299_writeRegister(LOFF_SENSN, ADS1299_LOFFM_EN_ALL);
+                ads1299_writeRegister(LOFF_SENSP, ADS1299_LOFFP_EN_ALL);
+            }
+            else if (events == ADS1299_CMD_ZSIGNAL_OFF)
+            {
+                ads1299_writeRegister(LOFF_SENSN, ADS1299_LOFFM_DIS_ALL);
+                ads1299_writeRegister(LOFF_SENSP, ADS1299_LOFFP_DIS_ALL);
             }
             else
             {
@@ -268,6 +358,7 @@ static void DASN_ADS1299_taskFxn(UArg a0, UArg a1)
                 ads1299_startConversion();
                 ads1299_estado = ESTADO_ADQUIRIENDO;
                 Log_info0("ESTADO_ADQUIRIENDO");
+                //Event_post(UI_event, UI_ACQ_BLE);
             }
             else if(events == ADS1299_CMD_CHAU)
             {
@@ -305,7 +396,7 @@ static void ADS1299_init(void)
     ads1299_event = Event_handle(&structEvent);
 
     // Inicializo los buffers del SPI en 0
-    for (uint8_t i=0; i<32;i++)
+    for (uint8_t i=0 ; i<DS_STREAM_LEN ; i++)
     {
         txbuf[i] = 0;
         rxbuf[i] = 0;
@@ -436,6 +527,49 @@ void ads1299_writeRegister(registers_t registro, uint8_t data)
 
 }
 
+/**
+ * @brief   Lee un regístro interno del ads1299
+ *
+ * @param   registro    : Registro a escribir del tipo registers_t.
+
+ */
+uint8_t ads1299_readRegister(registers_t registro)
+{
+/*
+    // Configure the transaction
+    ads1299transaction.count = 5;
+    ads1299transaction.txBuf = txbuf;
+    ads1299transaction.rxBuf = rxbuf;
+    *(transaction_t*)(ads1299transaction.arg) = READ_REG;
+
+    ((uint8_t*)ads1299transaction.txBuf)[0] = SDATAC_CMD;              ///< Necesario si esta en RDATAC mode
+    ((uint8_t*)ads1299transaction.txBuf)[1] = (RREG_CMD | registro);   ///< Hago la OR para tener el valor del comando compuesto
+    ((uint8_t*)ads1299transaction.txBuf)[2] = NULL_CMD;                ///< Indica que leo solo un registro
+    ((uint8_t*)ads1299transaction.txBuf)[3] = NULL_CMD;
+    // Agego este extra ya que sino el ads1299 no me tomaba el último byte
+    ((uint8_t*)ads1299transaction.txBuf)[4] = NULL_CMD;
+
+    //inicio transferencia por SPI
+    SPI_transfer(ads1299handle, &ads1299transaction);
+*/
+return 0;
+}
+
+void ads1299_sendCommand(commands_t cmd)
+{
+    // Configure the transaction
+    ads1299transaction.count = 2;
+    ads1299transaction.txBuf = txbuf;
+    ads1299transaction.rxBuf = rxbuf;
+    *(transaction_t*)(ads1299transaction.arg) = SEND_CMD;
+
+    ((uint8_t*)ads1299transaction.txBuf)[0] = cmd;
+    ((uint8_t*)ads1299transaction.txBuf)[1] = NULL_CMD;
+    ((uint8_t*)ads1299transaction.txBuf)[2] = NULL_CMD;
+
+    //inicio transferencia por SPI
+    SPI_transfer(ads1299handle, &ads1299transaction);
+}
 void ads1299_startConversion(void)
 {
     // Configure the transaction
@@ -518,9 +652,10 @@ void ADS1299_STOP(void)
 static void DRDYCallbackFxn(PIN_Handle handle, PIN_Id pinId)
 {
     counter+=1;
-    if(counter == 0)
+    if(counter == 10)
     {
         ads1299_readAllChannels();
+        counter = 0;
     }
 
 }
