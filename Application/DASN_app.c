@@ -82,6 +82,7 @@
 
 #include <DASN_app.h>
 #include <DASN_ADS1299.h>
+#include <DASN_UI.h>
 //#include <DASN_UI.h>
 #include <util.h>
 
@@ -112,21 +113,6 @@
 // Bitwise OR of all RTOS events to pend on
 #define PZ_ALL_EVENTS                        (PZ_ICALL_EVT | \
                                               PZ_APP_MSG_EVT)
-
-// Types of messages that can be sent to the user application task from other
-// tasks or interrupts. Note: Messages from BLE Stack are sent differently.
-#define DASN_SERVICE_WRITE_EVT   0  /* A characteristic value has been written     */
-#define DASN_SERVICE_CFG_EVT     1  /* A characteristic configuration has changed  */
-#define PZ_UPDATE_CHARVAL_EVT    2  /* Request from ourselves to update a value    */
-#define DASN_BUTTON_DEBOUNCED_EVT 3 /* A button has been debounced with new value  */
-#define PZ_PAIRSTATE_EVT         4  /* The pairing state is updated                */
-#define PZ_PASSCODE_EVT          5  /* A pass-code/PIN is requested during pairing */
-#define PZ_ADV_EVT               6  /* A subscribed advertisement activity         */
-#define PZ_START_ADV_EVT         7  /* Request advertisement start from task ctx   */
-#define PZ_SEND_PARAM_UPD_EVT    8  /* Request parameter update req be sent        */
-#define PZ_CONN_EVT              9  /* Connection Event End notice                 */
-//#define DASN_NEW_DATA_EVT      10 /* New data from ADS1299, defined in DASN_ADS1299.h */
-//#define DASN_TRANSFER_COMPLETE 11
 
 // General discoverable mode: advertise indefinitely
 #define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_GENERAL
@@ -188,13 +174,6 @@ typedef struct
 {
     uint16_t connHandle;
 } pzSendParamReq_t;
-
-// Struct for message about button state
-typedef struct
-{
-    PIN_Id pinId;
-    uint8_t state;
-} pzButtonState_t;
 
 // Container to store passcode data when passing from gapbondmgr callback
 // to app event. See the pfnPairStateCB_t documentation from the gapbondmgr.h
@@ -319,44 +298,6 @@ static List_List setPhyCommStatList;
 // List to store connection handles for queued param updates
 static List_List paramUpdateList;
 
-/* Pin driver handles */
-static PIN_Handle buttonPinHandle;
-static PIN_Handle ledPinHandle;
-
-/* Global memory storage for a PIN_Config table */
-static PIN_State buttonPinState;
-static PIN_State ledPinState;
-
-
-
-/*
- * Initial LED pin configuration table
- *   - LEDs Board_PIN_LED0 & Board_PIN_LED1 are off.
- */
-PIN_Config ledPinTable[] = {
-    Board_PIN_LED1 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL |
-    PIN_DRVSTR_MAX,
-    Board_PIN_LED2 | PIN_GPIO_OUTPUT_EN | PIN_GPIO_LOW | PIN_PUSHPULL |
-    PIN_DRVSTR_MAX,
-    PIN_TERMINATE
-};
-
-/*
- * Application button pin configuration table:
- *   - Buttons interrupts are configured to trigger on falling edge.
- */
-PIN_Config buttonPinTable[] = {
-    Board_PIN_BUTTON0 | PIN_INPUT_EN | PIN_PULLUP | PIN_IRQ_NEGEDGE,
-    PIN_TERMINATE
-};
-
-// Clock objects for debouncing the buttons
-static Clock_Struct button0DebounceClock;
-static Clock_Handle button0DebounceClockHandle;
-
-// State of the buttons
-static uint8_t button0State = 0;
-
 static uint8_t contador=0; //para debug
 //static uint8_t ds_stream_buf[DS_STREAM_LEN];
 
@@ -423,11 +364,7 @@ static void ProjectZero_handleUpdateLinkEvent(gapLinkUpdateEvent_t *pEvt);
 static void ProjectZero_paramUpdClockHandler(UArg arg);
 static void ProjectZero_processConnEvt(Gap_ConnEventRpt_t *pReport);
 
-/* Button handling functions */
-static void buttonDebounceSwiFxn(UArg buttonId);
-static void buttonCallbackFxn(PIN_Handle handle,PIN_Id pinId);
-
-static void DASN_handleButtonPress(pzButtonState_t *pState);
+static void DASN_handleButtonPress(DASN_ButtonState_t *pState);
 static void DASN_handleNewData(void* pdata);
 
 /* Utility functions */
@@ -534,36 +471,6 @@ static void DASN_init(void)
     // ******************************************************************
     // Hardware initialization
     // ******************************************************************
-
-    // Open LED pins
-    ledPinHandle = PIN_open(&ledPinState, ledPinTable);
-    if(!ledPinHandle)
-    {
-        Log_error0("Error initializing board LED pins");
-        Task_exit();
-    }
-
-    // Open button pins
-    buttonPinHandle = PIN_open(&buttonPinState, buttonPinTable);
-    if(!buttonPinHandle)
-    {
-        Log_error0("Error initializing button pins");
-        Task_exit();
-    }
-
-    // Setup callback for button pins
-    if(PIN_registerIntCb(buttonPinHandle, &buttonCallbackFxn) != 0)
-    {
-        Log_error0("Error registering button callback function");
-        Task_exit();
-    }
-
-    // Create the debounce clock objects for Button 0
-    button0DebounceClockHandle = Util_constructClock(&button0DebounceClock,
-                                                     buttonDebounceSwiFxn, 50,
-                                                     0,
-                                                     0,
-                                                     Board_PIN_BUTTON0);
 
     // Set the Device Name characteristic in the GAP GATT Service
     // For more information, see the section in the User's Guide:
@@ -672,9 +579,12 @@ static void DASN_init(void)
 static void DASN_taskFxn(UArg a0, UArg a1)
 {
     // Initialize application
+    if(DASN_UI_init() != 0)
+        Task_exit();
+
     DASN_init();
 
-    //ADS1299_init();
+    DASN_UI_update(UI_DASN_ON);
 
     // Application main loop
     for(;; )
@@ -886,7 +796,7 @@ static void ProjectZero_processApplicationMessage(DASN_Msg_t *pMsg)
 
       case DASN_BUTTON_DEBOUNCED_EVT: /* Message from swi about pin change */
       {
-          pzButtonState_t *pButtonState = (pzButtonState_t *)pMsg->pData;
+          DASN_ButtonState_t *pButtonState = (DASN_ButtonState_t *)pMsg->pData;
           DASN_handleButtonPress(pButtonState);
       }
       break;
@@ -1062,6 +972,8 @@ static void ProjectZero_processGapMessage(gapEventHdr_t *pMsg)
             Log_info1("Connected. Peer address: " \
                         ANSI_COLOR(FG_GREEN)"%s"ANSI_COLOR(ATTR_RESET),
                       (uintptr_t)addrStr);
+
+            DASN_UI_update(UI_CONNECTED_BLE);
         }
 
         if(linkDB_NumActive() < MAX_NUM_BLE_CONNS)
@@ -1097,6 +1009,11 @@ static void ProjectZero_processGapMessage(gapEventHdr_t *pMsg)
         if ( GapAdv_enable(advHandleLegacy, GAP_ADV_ENABLE_OPTIONS_USE_MAX, 0) == SUCCESS)
         {
             Log_info1("Restart Advertising, %d possible connection remain", MAX_NUM_BLE_CONNS - linkDB_NumActive());
+        }
+
+        if(linkDB_NumActive() == 0)
+        {
+            DASN_UI_update(UI_STAND_BY);
         }
     }
     break;
@@ -1767,11 +1684,11 @@ static void ProjectZero_updatePHYStat(uint16_t eventCode, uint8_t *pMsg)
  * @see     buttonDebounceSwiFxn
  * @see     buttonCallbackFxn
  *
- * @param   pState  pointer to pzButtonState_t message sent from debounce Swi.
+ * @param   pState  pointer to DASN_ButtonState_t message sent from debounce Swi.
  *
  * @return  None.
  */
-static void DASN_handleButtonPress(pzButtonState_t *pState)
+static void DASN_handleButtonPress(DASN_ButtonState_t *pState)
 {
     Log_info2("%s %s",
               (uintptr_t)(pState->pinId ==
@@ -1786,7 +1703,7 @@ static void DASN_handleButtonPress(pzButtonState_t *pState)
     case Board_PIN_BUTTON0:
         //TODO: Poner aqui lo que hace el boton
         Event_post(ads1299_event, ADS1299_test_event);
-        PIN_setOutputValue(ledPinHandle, Board_PIN_LED1, !PIN_getOutputValue(Board_PIN_LED1));
+        DASN_UI_toogleLed(Board_PIN_LED1);
 
         break;
     default:
@@ -1799,7 +1716,6 @@ static void DASN_handleButtonPress(pzButtonState_t *pState)
 static void DASN_handleNewData(void* pdata)
 {
     contador++;
-    //if ( contador % 2 == 0 )
     DataService_SetParameter(DS_STREAM_ID, DS_STREAM_LEN, pdata);
     DataService_SetParameter(DS_CMD_SND_ID, DS_CMD_SND_LEN, &contador);
 }
@@ -2124,107 +2040,7 @@ static void ProjectZero_paramUpdClockHandler(UArg arg)
     }
 }
 
-/*********************************************************************
- * @fn     buttonDebounceSwiFxn
- *
- * @brief  Callback from Clock module on timeout
- *
- *         Determines new state after debouncing
- *
- * @param  buttonId    The pin being debounced
- */
-static void buttonDebounceSwiFxn(UArg buttonId)
-{
-    Log_info0("Entro a buttonDebounceSwiFxn ");
 
-    // Used to send message to app
-    pzButtonState_t buttonMsg = { .pinId = buttonId };
-    uint8_t sendMsg = FALSE;
-
-    // Get current value of the button pin after the clock timeout
-    Log_info1("button0State = %d", button0State );
-    uint8_t buttonPinVal = PIN_getInputValue(buttonId);
-
-    Log_info1("buttonPinVal = %d", buttonPinVal );
-
-
-    // Set interrupt direction to opposite of debounced state
-    // If button is now released (button is active low, so release is high)
-    if(buttonPinVal)
-    {
-        // Enable negative edge interrupts to wait for press
-        PIN_setConfig(buttonPinHandle, PIN_BM_IRQ, buttonId | PIN_IRQ_NEGEDGE);
-    }
-    else
-    {
-        // Enable positive edge interrupts to wait for relesae
-        PIN_setConfig(buttonPinHandle, PIN_BM_IRQ, buttonId | PIN_IRQ_POSEDGE);
-    }
-
-    switch(buttonId)
-    {
-    case Board_PIN_BUTTON0:
-        // If button is now released (buttonPinVal is active low, so release is 1)
-        // and button state was pressed (buttonstate is active high so press is 1)
-        if(buttonPinVal && button0State)
-        {
-            // Button was released
-            Log_info0("SWI: Button was released");
-            buttonMsg.state = button0State = 0;
-            sendMsg = TRUE;
-        }
-        else if(!buttonPinVal && !button0State)
-        {
-            // Button was pressed
-            Log_info0("SWI: Button was pressed");
-            buttonMsg.state = button0State = 1;
-            sendMsg = TRUE;
-        }
-        break;
-    }
-
-    if(sendMsg == TRUE)
-    {
-        Log_info0("SWI: Mando ICall");
-        pzButtonState_t *pButtonState = ICall_malloc(sizeof(pzButtonState_t));
-        if(pButtonState != NULL)
-        {
-            *pButtonState = buttonMsg;
-            if(DASN_enqueueMsg(DASN_BUTTON_DEBOUNCED_EVT, pButtonState) != SUCCESS)
-            {
-              ICall_free(pButtonState);
-            }
-        }
-    }
-}
-
-/*********************************************************************
- * @fn     buttonCallbackFxn
- *
- * @brief  Callback from PIN driver on interrupt
- *
- *         Sets in motion the debouncing.
- *
- * @param  handle    The PIN_Handle instance this is about
- * @param  pinId     The pin that generated the interrupt
- */
-static void buttonCallbackFxn(PIN_Handle handle, PIN_Id pinId)
-{
-    Log_info1("Button interrupt: %s",
-              (uintptr_t)((pinId == Board_PIN_BUTTON0) ? "Button 0" : "Button 1"));
-
-    // Disable interrupt on that pin for now. Re-enabled after debounce.
-    PIN_setConfig(handle, PIN_BM_IRQ, pinId | PIN_IRQ_DIS);
-
-    // Start debounce timer
-    switch(pinId)
-    {
-    case Board_PIN_BUTTON0:
-        Util_startClock((Clock_Struct *)button0DebounceClockHandle);
-        break;
-
-    }
-}
 
 /******************************************************************************
  *****************************************************************************

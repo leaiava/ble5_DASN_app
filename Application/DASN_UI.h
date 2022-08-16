@@ -1,52 +1,58 @@
 /*
- * UI.h
+ * DASN_UI_Module.h
  *
- *  Created on: Feb 19, 2022
- *      Author: leandro
+ *  Created on: Aug 14, 2022
+ *      Author: leandroarrieta@gmail.com
  */
 
 #ifndef APPLICATION_DASN_UI_H_
 #define APPLICATION_DASN_UI_H_
-#include <ti/sysbios/knl/Task.h>
 
-void DASN_UI_createTask(void);
+/*******************************************************************************
+ * INCLUDES
+ */
+#include <Board.h>
+#include <ti/drivers/PIN.h>
+#include <DASN_app.h>
+#include "util.h"
+#include <icall.h>
+//#include <xdc/runtime/Log.h> // Comment this in to use xdc.runtime.Log
+#include <uartlog/UartLog.h>  // Comment out if using xdc Log
 
-// List of events to manage
-#define UI_ALL_EVENTS          0x1F
+// Struct for message about button state
+typedef struct
+{
+    PIN_Id pinId;
+    uint8_t state;
+} DASN_ButtonState_t;
+
 typedef enum {
+    DASN_UI_OK = 0,
+    DASN_UI_ERROR1,         // Error initializing board LED pins
+    DASN_UI_ERROR2,         // Error initializing button pins
+    DASN_UI_ERROR3,
+    DASN_UI_PINID_INVALID,
+    DASN_UI_STATE_INVALID
+}DASN_UI_returns_t;
 
-    UI_ACQ_BLE = 1, //!<  1-
-    UI_2,      //!<  2-
-    UI_3,      //!<  3-
-    UI_4,      //!<  4-
-    UI_5,      //!<  5-
-    UI_6,      //!<  6-
-    UI_7,      //!<  7-
-    UI_8,      //!<  8-
-    UI_9,      //!<  9-
-    UI_A,      //!<  A-
-    UI_B,      //!<  B-
-    UI_C,      //!<  C-
-    UI_D,      //!<  D-
-    UI_E,      //!<  E-
-    UI_F,      //!<  F-
-    UI_10,      //!< 10-
-    UI_11,      //!< 11-
-    UI_12,      //!< 12-
-    UI_13,      //!< 13-
-    UI_14,      //!< 14-
-    UI_15,      //!< 15-
-    UI_16,      //!< 16-
-    UI_17,      //!< 17-
-    UI_18,      //!< 18-
-    UI_19,      //!< 19-
-    UI_1A,      //!< 1A-
-    UI_1B,      //!< 1B-
-    UI_1C,      //!< 1C-
-    UI_1D,      //!< 1D-
-    UI_1E,      //!< 1E-
-    UI_1F,      //!< 1F-
+typedef enum {
+    UI_DASN_ON,
+    UI_DASN_OFF,
+    UI_STAND_BY,
+    UI_CONNECTED_BLE,
+    UI_CONNECTED_485,
 
-}UIcmd_t;
+    STATES_COUNT
+}DASN_UI_states_t;
+
+#define UI_LED_ON   1
+#define UI_LED_OFF  0
+
+static void buttonDebounceSwiFxn(UArg buttonId);
+static void buttonCallbackFxn(PIN_Handle handle,PIN_Id pinId);
+static void LedSwiFxn(UArg ledId);
+DASN_UI_returns_t DASN_UI_init(void);
+DASN_UI_returns_t DASN_UI_toogleLed(PIN_Id led);
+DASN_UI_returns_t DASN_UI_update(DASN_UI_states_t state);
 
 #endif /* APPLICATION_DASN_UI_H_ */

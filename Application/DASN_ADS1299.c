@@ -12,6 +12,7 @@
 #include <ti/sysbios/BIOS.h>
 #define DEBUG_ON
 #ifdef  DEBUG_ON
+//#include <xdc/runtime/Log.h> // Comment this in to use xdc.runtime.Log
 #include <uartlog/UartLog.h>  // Comment out if using xdc Log
 #include <ti/display/AnsiColor.h>
 #endif
@@ -651,13 +652,17 @@ void ADS1299_STOP(void)
  */
 static void DRDYCallbackFxn(PIN_Handle handle, PIN_Id pinId)
 {
+    /*
+    static uint8_t counter = 0;
+
     counter+=1;
     if(counter == 10)
     {
         ads1299_readAllChannels();
         counter = 0;
     }
-
+    */
+    ads1299_readAllChannels();
 }
 
 /**

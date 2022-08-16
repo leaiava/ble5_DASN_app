@@ -50,6 +50,7 @@
 #include <Board.h>
 #include <DASN_app.h>
 #include <DASN_ADS1299.h>
+#include <DASN_UI.h>
 #include <stdint.h>
 
 #include <xdc/runtime/Error.h>
@@ -119,7 +120,7 @@ extern void AssertHandler(uint8_t assertCause,
 int main()
 {
   /* Register Application callback to trap asserts raised in the Stack */
-  RegisterAssertCback(AssertHandler);
+    RegisterAssertCback(AssertHandler);
 
   Board_initGeneral();
 
@@ -168,6 +169,7 @@ int main()
 
     DASN_createTask();
     DASN_ADS1299_createTask();
+
     /* enable interrupts and start SYS/BIOS */
     BIOS_start();
 
