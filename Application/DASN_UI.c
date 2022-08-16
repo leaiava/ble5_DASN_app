@@ -227,7 +227,7 @@ static void buttonCallbackFxn(PIN_Handle handle, PIN_Id pinId)
  * @return  Devuelve DASN_UI_OK si salió todo bien, sino devuelve el
  *          codigo de error correspondiente.
  */
-DASN_UI_returns_t DASN_UI_toogleLed(PIN_Id ledId)
+static DASN_UI_returns_t DASN_UI_toogleLed(PIN_Id ledId)
 {
     if (ledId == Board_PIN_LED1 || ledId == Board_PIN_LED2)
     {
@@ -278,6 +278,10 @@ DASN_UI_returns_t DASN_UI_update(DASN_UI_states_t state)
         PIN_setOutputValue(ledPinHandle, Board_PIN_LED2, UI_LED_OFF);
         Util_stopClock((Clock_Struct *)Led1ClockHandle);
         PIN_setOutputValue(ledPinHandle, Board_PIN_LED1, UI_LED_OFF);
+        break;
+
+    case UI_TEST_LED1:
+        DASN_UI_toogleLed(Board_PIN_LED1);
         break;
 
     default:

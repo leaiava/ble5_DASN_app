@@ -41,6 +41,7 @@ typedef enum {
     UI_STAND_BY,
     UI_CONNECTED_BLE,
     UI_CONNECTED_485,
+    UI_TEST_LED1,
 
     STATES_COUNT
 }DASN_UI_states_t;
@@ -52,7 +53,7 @@ static void buttonDebounceSwiFxn(UArg buttonId);
 static void buttonCallbackFxn(PIN_Handle handle,PIN_Id pinId);
 static void LedSwiFxn(UArg ledId);
 DASN_UI_returns_t DASN_UI_init(void);
-DASN_UI_returns_t DASN_UI_toogleLed(PIN_Id led);
+static DASN_UI_returns_t DASN_UI_toogleLed(PIN_Id led);
 DASN_UI_returns_t DASN_UI_update(DASN_UI_states_t state);
 
 #endif /* APPLICATION_DASN_UI_H_ */

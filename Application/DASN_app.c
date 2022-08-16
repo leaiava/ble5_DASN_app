@@ -1703,7 +1703,7 @@ static void DASN_handleButtonPress(DASN_ButtonState_t *pState)
     case Board_PIN_BUTTON0:
         //TODO: Poner aqui lo que hace el boton
         Event_post(ads1299_event, ADS1299_test_event);
-        DASN_UI_toogleLed(Board_PIN_LED1);
+        DASN_UI_update(UI_TEST_LED1);
 
         break;
     default:
